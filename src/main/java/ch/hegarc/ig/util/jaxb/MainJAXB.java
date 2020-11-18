@@ -1,6 +1,5 @@
-package ch.hegarc.ig.cpo.jaxb;
+import ch.hegarc.ig.cpo.jaxb.Dataset;
 
-import ch.hegarc.ig.cpo.business.StudentList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
@@ -16,13 +15,13 @@ public class MainJAXB {
     
     private void run() {
         try {
-            JAXBContext context = JAXBContext.newInstance(StudentList.class);
+            JAXBContext context = JAXBContext.newInstance(Dataset.class);
             // Création du Marshaller : instances -> XML
             Marshaller m = context.createMarshaller();
             // Format de la sortie
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             // Instanciation de la liste d'étudiant
-            StudentList liste = StudentList.newPopulatedStudents();
+            Dataset liste = new Dataset();
             // Création du XML
             m.marshal(liste, System.out);
 

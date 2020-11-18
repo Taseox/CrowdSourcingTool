@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- XML Schema Generated from XML Document on Wed Nov 18 2020 13:24:22 GMT+0100 (heure normale d’Europe centrale) -->
+<!-- with XmlGrid.net Free Online Service http://xmlgrid.net -->
+<element name="dataset">
+  <complexType>
+    <sequence>
+      <element name="record" maxOccurs="unbounded">
+        <complexType>
+          <sequence>
+            <element name="id" type="int"/>
+            <element name="name" type="string"/>
+            <element name="donateurs" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element name="id" type="int"/>
+                  <element name="prenom" type="string"/>
+                  <element name="nom" type="string"/>
+                  <element name="email" type="string"/>
+                  <element name="langue" type="string"/>
+                  <element name="adresse" type="string"/>
+                  <element name="ville" type="string"/>
+                  <element name="monnaie" type="string"/>
+                  <element name="somme" type="int"/>
+                  <element name="paye" type="string"/>
+                  <element name="annule" type="string"/>
+                  <element name="dateDon" type="string"/>
+                  <element name="dateVersement" type="string"/>
+                </sequence>
+              </complexType>
+            </element>
+          </sequence>
+        </complexType>
+      </element>
+    </sequence>
+  </complexType>
+</element>
