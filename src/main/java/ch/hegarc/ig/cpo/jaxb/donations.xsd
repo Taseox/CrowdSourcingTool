@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <!-- XML Schema Generated from XML Document on Wed Nov 18 2020 13:24:22 GMT+0100 (heure normale d’Europe centrale) -->
+  <!-- with XmlGrid.net Free Online Service http://xmlgrid.net -->
+  <xs:element name="dataset">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="record" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id" type="xs:int"></xs:element>
+              <xs:element name="name" type="xs:string"></xs:element>
+              <xs:element name="donateurs" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="id" type="xs:int"></xs:element>
+                    <xs:element name="prenom" type="xs:string"></xs:element>
+                    <xs:element name="nom" type="xs:string"></xs:element>
+                    <xs:element name="email" type="xs:string"></xs:element>
+                    <xs:element name="langue" type="xs:string"></xs:element>
+                    <xs:element name="adresse" type="xs:string"></xs:element>
+                    <xs:element name="ville" type="xs:string"></xs:element>
+                    <xs:element name="monnaie" type="xs:string"></xs:element>
+                    <xs:element name="somme" type="xs:int"></xs:element>
+                    <xs:element name="paye" type="xs:string"></xs:element>
+                    <xs:element name="annule" type="xs:string"></xs:element>
+                    <xs:element name="dateDon" type="xs:string"></xs:element>
+                    <xs:element name="dateVersement" type="xs:string"></xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -24,9 +24,9 @@ public class MainReader {
 
 
             //TODO : fix this shit right here --v--
-            DonateurList[] students = om.readValue(new File("donations.json"), DonateurList[].class);
+            DonateurList[] donateurs = om.readValue(new File("donations.json"), DonateurList[].class);
 
-            logger.log(Level.INFO, students.toString());
+            logger.log(Level.INFO, donateurs.toString());
 
 
         } catch (IOException ex) {
