@@ -1,11 +1,16 @@
 package ch.hegarc.ig.business;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Projet {
 
+    @JsonProperty("id")
     private long id;
+    @JsonProperty("projet")
     private String name;
     private List<Donateur> donateurs = new ArrayList<Donateur>();
 
@@ -48,4 +53,19 @@ public class Projet {
         this.donateurs = donateurs;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Projet numero : ");
+        sb.append(getId());
+        sb.append("\n");
+        sb.append("Nom du projet : ");
+        sb.append(getName());
+        for (Donateur d : getDonateurs()) {
+            sb.append(d);
+            sb.append("\n");
+        }
+
+        return sb.toString();
+    }
 }

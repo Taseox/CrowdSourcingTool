@@ -1,8 +1,11 @@
 package ch.hegarc.ig.business;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Donateur {
 
     private long id;
+    @JsonProperty ("prenom")
     private String prNom;
     private String nom;
     private String email;
@@ -133,5 +136,21 @@ public class Donateur {
 
     public void setDateVersement(String dateVersement) {
         this.dateVersement = dateVersement;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n");
+        sb.append("Donateur num : ");
+        sb.append(getId());
+        sb.append("\n");
+        sb.append("Name : ");
+        sb.append(getNom());
+        sb.append(" ");
+        sb.append(getPrNom());
+
+        return sb.toString();
+
     }
 }
