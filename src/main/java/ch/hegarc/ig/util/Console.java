@@ -1,5 +1,6 @@
 package ch.hegarc.ig.util;
 
+import ch.hegarc.ig.util.jackson.JacksonWriter;
 import org.apache.commons.cli.*;
 
 import java.util.Scanner;
@@ -37,7 +38,7 @@ public class Console {
                         System.out.println("Import du fichier " + fileName);
 
                         // TODO Import du fichier XML ou JSON
-
+                        
                     } else {
                         printAppHelp();
                     }
@@ -51,6 +52,7 @@ public class Console {
                         System.out.println("Export du " + projectName + "dans le fichier " + fileName);
 
                         // TODO Export du fichier JSON
+                        //JacksonWriter.run(projectName, fileName);
 
                     } else {
                         printAppHelp();
