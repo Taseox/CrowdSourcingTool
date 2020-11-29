@@ -12,7 +12,7 @@ public class Projet {
     private long id;
     @JsonProperty("projet")
     private String name;
-    private List<Donateur> donateurs = new ArrayList<Donateur>();
+    private List<Donateur> donateurs = new ArrayList<>();
 
     public Projet() {
     }
@@ -27,6 +27,18 @@ public class Projet {
         this.id = id;
         this.name = name;
         this.donateurs = donateurs;
+    }
+
+    private Projet(String projetName) {
+        this.name = projetName;
+    }
+
+    public static Projet newPopulatedProjet(String projetName){
+        Projet projet = new Projet(projetName);
+        projet.getDonateurs().add(new Donateur(1, "Guy", "Lafontaine", "lafontaine.guy@gmail.com", "FR", "testadresse", "testville", "CHF", 1000, true, false, "29.11.1992","29.11.1992"));
+        projet.getDonateurs().add(new Donateur(2, "Haha", "Lafontaine", "lafontaine.haha@gmail.com", "FR", "testadresse", "testville", "CHF", 1000, true, false, "29.11.1992","29.11.1992"));
+
+        return projet;
     }
 
     public long getId() {

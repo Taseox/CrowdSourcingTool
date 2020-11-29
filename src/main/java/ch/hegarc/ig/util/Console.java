@@ -2,6 +2,7 @@ package ch.hegarc.ig.util;
 
 import ch.hegarc.ig.util.jackson.JacksonReader;
 import ch.hegarc.ig.util.jackson.JacksonWriter;
+import ch.hegarc.ig.util.jaxb.unmarshalling.JaxbUnmarshalling;
 import org.apache.commons.cli.*;
 
 import java.util.Scanner;
@@ -39,7 +40,10 @@ public class Console {
                         System.out.println("Import du fichier " + fileName);
 
                         // TODO Import du fichier XML ou JSON
-                        JacksonReader.run(fileName);
+                        if (fileName.endsWith(".xml"))
+                            JaxbUnmarshalling.run(fileName);
+                        else if (fileName.endsWith(".json"))
+                            JacksonReader.run(fileName);
                     } else {
                         printAppHelp();
                     }
@@ -50,10 +54,10 @@ public class Console {
 
                         String fileName = cmdLine.getOptionValue(OPT_FICHIER.getOpt());
                         String projectName = cmdLine.getOptionValue(OPT_PROJET.getOpt());
-                        System.out.println("Export du " + projectName + "dans le fichier " + fileName);
+                        System.out.println("Export du projet <" + projectName + "> dans le fichier <" + fileName +">");
 
                         // TODO Export du fichier JSON
-                        //JacksonWriter.run(projectName, fileName);
+                        JacksonWriter.run(projectName, fileName);
 
                     } else {
                         printAppHelp();

@@ -8,25 +8,20 @@ import javax.xml.stream.XMLStreamReader;
 import java.io.FileInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import ch.hegarc.ig.business.*;
+
 import ch.hegarc.ig.cpo.jaxb.Dataset;
-import com.sun.org.apache.xml.internal.serialize.IndentPrinter;
 
-public class MainUnmarshalling {
+public class JaxbUnmarshalling {
 
-    private static final Logger logger = Logger.getLogger(MainUnmarshalling.class.getName());
+    private static final Logger logger = Logger.getLogger(JaxbUnmarshalling.class.getName());
 
-    private MainUnmarshalling() {
-    }
-
-    private void run() {
-
+    public static void run(String filename) {
         try {
             JAXBContext jc = JAXBContext.newInstance("ch.hegarc.ig.cpo.jaxb");
             
             Unmarshaller unmarshaller = jc.createUnmarshaller();
 
-            XMLStreamReader in = XMLInputFactory.newInstance().createXMLStreamReader(new FileInputStream("donations.xml"));
+            XMLStreamReader in = XMLInputFactory.newInstance().createXMLStreamReader(new FileInputStream(filename));
 
             JAXBElement<Dataset> o = unmarshaller.unmarshal(in, Dataset.class);
 
@@ -40,12 +35,7 @@ public class MainUnmarshalling {
             }
 
         } catch (Exception ex) {
-            Logger.getLogger(MainUnmarshalling.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(JaxbUnmarshalling.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    public static void main(String[] args) {
-        new MainUnmarshalling().run();
-    }
-
 }
