@@ -18,11 +18,20 @@ public class ProjetSet {
         this.projets.add(projet);
     }
 
+    public void addProjets(Set<Projet> projets){
+        for (Projet p : projets){
+            projets.add(p);
+        }
+    }
+
     public Projet get(String nom){
-        Projet projet = null;
-        for (Projet p : projets) {
+        Projet projet = new Projet();
+        for (Projet p : this.projets) {
             if (p.getName().equalsIgnoreCase(nom)) {
-                return p;
+                projet = p;
+
+            }else{
+                System.out.printf("FAIL");
             }
         }
         return projet;
@@ -31,5 +40,14 @@ public class ProjetSet {
         public Set<Projet> getList () {
             return  this.projets;
         }
+
+ /*       public String toString(){
+        StringBuilder sb = new StringBuilder();
+            for(Projet p : projets){
+                sb.append(p.toString());
+            }
+            return sb.toString();
+        }
+*/
     }
 

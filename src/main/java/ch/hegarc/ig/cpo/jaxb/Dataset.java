@@ -296,9 +296,9 @@ public class Dataset {
             protected String monnaie;
             protected int somme;
             @XmlElement(required = true)
-            protected String paye;
+            protected Boolean paye;
             @XmlElement(required = true)
-            protected String annule;
+            protected Boolean annule;
             @XmlElement(required = true)
             protected String dateDon;
             @XmlElement(required = true)
@@ -512,7 +512,7 @@ public class Dataset {
              *     {@link String }
              *     
              */
-            public String getPaye() {
+            public Boolean getPaye() {
                 return paye;
             }
 
@@ -524,7 +524,7 @@ public class Dataset {
              *     {@link String }
              *     
              */
-            public void setPaye(String value) {
+            public void setPaye(Boolean value) {
                 this.paye = value;
             }
 
@@ -536,7 +536,7 @@ public class Dataset {
              *     {@link String }
              *     
              */
-            public String getAnnule() {
+            public Boolean getAnnule() {
                 return annule;
             }
 
@@ -548,7 +548,7 @@ public class Dataset {
              *     {@link String }
              *     
              */
-            public void setAnnule(String value) {
+            public void setAnnule(Boolean value) {
                 this.annule = value;
             }
 

@@ -4,15 +4,18 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Projet {
 
     @JsonProperty("id")
     private long id;
     @JsonProperty("projet")
+
     private String name;
-    private List<Donateur> donateurs = new ArrayList<>();
+    private Set<Donateur> donateurs = new HashSet<>();
 
     public Projet() {
     }
@@ -22,7 +25,7 @@ public class Projet {
      * @param name
      * @param id
      */
-    public Projet(long id, String name, List<Donateur> donateurs) {
+    public Projet(long id, String name, Set<Donateur> donateurs) {
         super();
         this.id = id;
         this.name = name;
@@ -57,11 +60,11 @@ public class Projet {
         this.name = name;
     }
 
-    public List<Donateur> getDonateurs() {
+    public Set<Donateur> getDonateurs() {
         return donateurs;
     }
 
-    public void setDonateurs(List<Donateur> donateurs) {
+    public void setDonateurs(Set<Donateur> donateurs) {
         this.donateurs = donateurs;
     }
 

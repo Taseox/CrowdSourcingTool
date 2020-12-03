@@ -10,6 +10,7 @@ import org.apache.commons.cli.*;
 import java.io.IOException;
 import java.sql.SQLOutput;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Console {
 
@@ -46,11 +47,15 @@ public class Console {
                         System.out.println("Import du fichier " + fileName);
                         try {
                             if (fileName.endsWith(".xml")) {
-                                JaxbUnmarshalling.run(fileName);
-                            } else if (fileName.endsWith(".json"))
-                                JacksonReader.run(fileName);
-                        } catch (IOException E){
-                            System.out.println("ters");
+                                projets.addProjets(JaxbUnmarshalling.run(fileName));
+                                projets.get("Alpha").toString();
+                                //System.out.println(projets.toString());
+                            } else if (fileName.endsWith(".json")) {
+                                projets.addProjets(JacksonReader.run(fileName));
+                                //System.out.println(projets.toString());
+                            }
+                        } catch (Exception E){
+                            E.printStackTrace();
                         }
                     } else {
                         printAppHelp();

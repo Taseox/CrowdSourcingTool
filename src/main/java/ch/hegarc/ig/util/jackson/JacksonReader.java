@@ -21,11 +21,11 @@ public class JacksonReader {
 
             //ObjectMapper om = new ObjectMapper();
 
-            Set<Projet> donateurs = om.readValue(new File(filename), new TypeReference<Set<Projet>>() {
+            Set<Projet> projets = om.readValue(new File(filename), new TypeReference<Set<Projet>>() {
             });
-            for (Projet p : donateurs) {
+            for (Projet p : projets) {
                 System.out.println(p.toString());
             }
-        return donateurs;
+        return projets;
     }
 }
