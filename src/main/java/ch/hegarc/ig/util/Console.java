@@ -1,19 +1,19 @@
 package ch.hegarc.ig.util;
 
 import ch.hegarc.ig.business.Projet;
-import ch.hegarc.ig.business.ProjetList;
+import ch.hegarc.ig.business.ProjetSet;
 import ch.hegarc.ig.util.jackson.JacksonReader;
 import ch.hegarc.ig.util.jackson.JacksonWriter;
 import ch.hegarc.ig.util.jaxb.unmarshalling.JaxbUnmarshalling;
 import org.apache.commons.cli.*;
-import org.atteo.xmlcombiner.XmlCombiner;
 
-import java.io.File;
+import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class Console {
 
-    private static ProjetList projets = new ProjetList();
+    private static ProjetSet projets = new ProjetSet();
 
     final private String CMD_IMPORT = "import";
     final private String CMD_EXPORT = "export";
@@ -44,11 +44,14 @@ public class Console {
                         //TODO : fusion des fichiers
                         String fileName = cmdLine.getOptionValue(OPT_FICHIER.getOpt());
                         System.out.println("Import du fichier " + fileName);
-                        if (fileName.endsWith(".xml")) {
-                            JaxbUnmarshalling.run(fileName);
-                         }
-                        else if (fileName.endsWith(".json"))
-                            JacksonReader.run(fileName);
+                        try {
+                            if (fileName.endsWith(".xml")) {
+                                JaxbUnmarshalling.run(fileName);
+                            } else if (fileName.endsWith(".json"))
+                                JacksonReader.run(fileName);
+                        } catch (IOException E){
+                            System.out.println("ters");
+                        }
                     } else {
                         printAppHelp();
                     }
@@ -61,9 +64,9 @@ public class Console {
                         String projectName = cmdLine.getOptionValue(OPT_PROJET.getOpt());
                         // TODO Export du fichier JSON
 
-                        if(projectName.equals("All")){
+                        if(projectName.equalsIgnoreCase("All")){
                             System.out.println("Export de tous les projets.");
-                            for(Projet p : projets.getAll()){
+                            for(Projet p : projets.getList()){
                                 JacksonWriter.run(p.getName(),"donations.json");
                             }
                         }else{
