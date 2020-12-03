@@ -1,13 +1,19 @@
 package ch.hegarc.ig.util;
 
+import ch.hegarc.ig.business.Projet;
+import ch.hegarc.ig.business.ProjetList;
 import ch.hegarc.ig.util.jackson.JacksonReader;
 import ch.hegarc.ig.util.jackson.JacksonWriter;
 import ch.hegarc.ig.util.jaxb.unmarshalling.JaxbUnmarshalling;
 import org.apache.commons.cli.*;
+import org.atteo.xmlcombiner.XmlCombiner;
 
+import java.io.File;
 import java.util.Scanner;
 
 public class Console {
+
+    private static ProjetList projets = new ProjetList();
 
     final private String CMD_IMPORT = "import";
     final private String CMD_EXPORT = "export";
@@ -35,13 +41,12 @@ public class Console {
 
                 case CMD_IMPORT:
                     if (cmdLine.hasOption(OPT_FICHIER.getOpt())) {
-
+                        //TODO : fusion des fichiers
                         String fileName = cmdLine.getOptionValue(OPT_FICHIER.getOpt());
                         System.out.println("Import du fichier " + fileName);
-
-                        // TODO Import du fichier XML ou JSON
-                        if (fileName.endsWith(".xml"))
+                        if (fileName.endsWith(".xml")) {
                             JaxbUnmarshalling.run(fileName);
+                         }
                         else if (fileName.endsWith(".json"))
                             JacksonReader.run(fileName);
                     } else {
@@ -54,11 +59,16 @@ public class Console {
 
                         String fileName = cmdLine.getOptionValue(OPT_FICHIER.getOpt());
                         String projectName = cmdLine.getOptionValue(OPT_PROJET.getOpt());
-                        System.out.println("Export du projet <" + projectName + "> dans le fichier <" + fileName +">");
-
                         // TODO Export du fichier JSON
-                        JacksonWriter.run(projectName, fileName);
 
+                        if(projectName.equals("All")){
+                            System.out.println("Export de tous les projets.");
+                            for(Projet p : projets.getAll()){
+                                JacksonWriter.run(p.getName(),"donations.json");
+                            }
+                        }else{
+                            JacksonWriter.run(projectName, fileName);
+                        }
                     } else {
                         printAppHelp();
                     }

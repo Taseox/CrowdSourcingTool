@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 public class JacksonWriter {
 
     private static final Logger logger = Logger.getLogger(JacksonWriter.class.getName());
-    
+
     public static void run(String projetname, String filename) {
         try {
 
@@ -21,7 +21,8 @@ public class JacksonWriter {
             // Ignorer les champs vide
             //om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             Projet projet = Projet.newPopulatedProjet(projetname);
-                        // Ecriture avec pretty print
+
+            // Ecriture avec pretty print
             om.writerWithDefaultPrettyPrinter().writeValue(new File(filename), projet);
             
             logger.log(Level.INFO, "Fichier <" + filename + "> créé");
