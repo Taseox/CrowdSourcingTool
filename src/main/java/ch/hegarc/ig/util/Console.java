@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class Console {
 
-    private static ProjetSet projets = new ProjetSet();
+    private ProjetSet projets = new ProjetSet();
 
     final private String CMD_IMPORT = "import";
     final private String CMD_EXPORT = "export";
@@ -28,7 +28,6 @@ public class Console {
      * Démarre la commande
      */
     public void runCommand() {
-
         Scanner command = new Scanner(System.in);
         System.out.println("Entrer votre commande: ");
 
@@ -47,11 +46,11 @@ public class Console {
                         System.out.println("Import du fichier " + fileName);
                         try {
                             if (fileName.endsWith(".xml")) {
-                                projets.addProjets(JaxbUnmarshalling.run(fileName));
-                                projets.get("Alpha").toString();
+                                this.projets.addProjets(JaxbUnmarshalling.run(fileName));
+                                this.projets.get("Alpha").toString();
                                 //System.out.println(projets.toString());
                             } else if (fileName.endsWith(".json")) {
-                                projets.addProjets(JacksonReader.run(fileName));
+                                this.projets.addProjets(JacksonReader.run(fileName));
                                 //System.out.println(projets.toString());
                             }
                         } catch (Exception E){

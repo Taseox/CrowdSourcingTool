@@ -6,7 +6,7 @@ public class Donateur {
 
     private long id;
     @JsonProperty ("prenom")
-    private String prNom;
+    private String prenom;
     private String nom;
     private String email;
     private String langue;
@@ -29,16 +29,16 @@ public class Donateur {
      * @param nom
      * @param annul
      * @param dateDon
-     * @param prNom
+     * @param prenom
      * @param dateVersement
      * @param adresse
      * @param id
      * @param email
      */
-    public Donateur(long id, String prNom, String nom, String email, String langue, String adresse, String ville, String monnaie, long somme, boolean pay, boolean annul, String dateDon, String dateVersement) {
+    public Donateur(long id, String prenom, String nom, String email, String langue, String adresse, String ville, String monnaie, long somme, boolean pay, boolean annul, String dateDon, String dateVersement) {
         super();
         this.id = id;
-        this.prNom = prNom;
+        this.prenom = prenom;
         this.nom = nom;
         this.email = email;
         this.langue = langue;
@@ -58,12 +58,12 @@ public class Donateur {
         this.id = id;
     }
 
-    public String getPrNom() {
-        return prNom;
+    public String getPrenom() {
+        return prenom;
     }
 
-    public void setPrNom(String prNom) {
-        this.prNom = prNom;
+    public void setPrenom(String prNom) {
+        this.prenom = prNom;
     }
 
     public String getNom() {
@@ -148,7 +148,7 @@ public class Donateur {
         sb.append("Name : ");
         sb.append(getNom());
         sb.append(" ");
-        sb.append(getPrNom());
+        sb.append(getPrenom());
 
         return sb.toString();
 

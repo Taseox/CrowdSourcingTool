@@ -3,12 +3,11 @@ package ch.hegarc.ig.business;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class Projet {
+public class Projet implements Comparable<Projet>{
 
     @JsonProperty("id")
     private long id;
@@ -30,6 +29,7 @@ public class Projet {
         this.id = id;
         this.name = name;
         this.donateurs = donateurs;
+        this.trierDonateurs();
     }
 
     private Projet(String projetName) {
@@ -64,6 +64,16 @@ public class Projet {
         return donateurs;
     }
 
+    @Override
+    public int compareTo(Projet p) {
+        return this.getName().compareTo(p.getName());
+    }
+
+    public void trierDonateurs () {
+        Stream<Donateur> stream = this.donateurs.stream().sorted(Comparator.comparing(Donateur::getNom).thenComparing(Donateur::getPrenom));
+        this.donateurs = stream.collect(Collectors.toSet());
+    }
+
     public void setDonateurs(Set<Donateur> donateurs) {
         this.donateurs = donateurs;
     }
@@ -76,11 +86,15 @@ public class Projet {
         sb.append("\n");
         sb.append("Nom du projet : ");
         sb.append(getName());
-        for (Donateur d : getDonateurs()) {
-            sb.append(d);
-            sb.append("\n");
+        if (this.donateurs.isEmpty ())
+            sb.append ("Pas de donateurs pour ce projet");
+        else {
+            sb.append ("Les donateurs de ce projet : \n");
+            for (Donateur d : getDonateurs()) {
+                sb.append(d);
+                sb.append("\n");
+            }
         }
-
         return sb.toString();
     }
 }

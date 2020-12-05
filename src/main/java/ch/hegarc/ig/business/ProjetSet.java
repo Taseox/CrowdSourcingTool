@@ -12,16 +12,17 @@ import java.util.*;
 public class ProjetSet {
     private Set<Projet> projets;
 
-    public ProjetSet(){}
-
-    public void add(Projet projet){
-        this.projets.add(projet);
+    public ProjetSet(){
+        this.projets = new HashSet<>();
     }
 
-    public void addProjets(Set<Projet> projets){
-        for (Projet p : projets){
-            projets.add(p);
-        }
+    public void addProjets (Set<Projet> projets) {
+        for (Projet p : projets)
+            this.addProjet(p);
+    }
+
+    public void addProjet (Projet projet) {
+        this.projets.add(projet);
     }
 
     public Projet get(String nom){
@@ -37,17 +38,17 @@ public class ProjetSet {
         return projet;
     }
 
-        public Set<Projet> getList () {
-            return  this.projets;
+
+    public Set<Projet> getList () {
+            return this.projets;
         }
 
- /*       public String toString(){
+    public String toString(){
         StringBuilder sb = new StringBuilder();
-            for(Projet p : projets){
-                sb.append(p.toString());
-            }
-            return sb.toString();
+        for(Projet p : this.projets)
+            sb.append(p.toString());
+
+        return sb.toString();
         }
-*/
     }
 
