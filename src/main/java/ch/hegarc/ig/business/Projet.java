@@ -36,7 +36,7 @@ public class Projet implements Comparable<Projet>{
         this.name = projetName;
     }
 
-    public static Projet newPopulatedProjet(String projetName){
+/*    public static Projet newPopulatedProjet(String projetName){
         Projet projet = new Projet(projetName);
         projet.getDonateurs().add(new Donateur(1, "Guy", "Lafontaine", "lafontaine.guy@gmail.com", "FR", "testadresse", "testville", "CHF", 1000, true, false, "29.11.1992","29.11.1992"));
         projet.getDonateurs().add(new Donateur(2, "Haha", "Lafontaine", "lafontaine.haha@gmail.com", "FR", "testadresse", "testville", "CHF", 1000, true, false, "29.11.1992","29.11.1992"));
@@ -44,6 +44,11 @@ public class Projet implements Comparable<Projet>{
         return projet;
     }
 
+
+    public Projet getProjet() {
+        return this;
+    }
+*/
     public long getId() {
         return id;
     }
@@ -81,20 +86,20 @@ public class Projet implements Comparable<Projet>{
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Projet numero : ");
+        sb.append("Projet : ");
+        sb.append(getName());
+        sb.append(" numero ");
         sb.append(getId());
         sb.append("\n");
-        sb.append("Nom du projet : ");
-        sb.append(getName());
         if (this.donateurs.isEmpty ())
             sb.append ("Pas de donateurs pour ce projet");
         else {
             sb.append ("Les donateurs de ce projet : \n");
             for (Donateur d : getDonateurs()) {
-                sb.append(d);
-                sb.append("\n");
+                sb.append(d.toString ()).append("\n");
             }
         }
+        sb.append("\n");
         return sb.toString();
     }
 }

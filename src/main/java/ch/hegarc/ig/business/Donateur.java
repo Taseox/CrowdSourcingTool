@@ -141,15 +141,8 @@ public class Donateur {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("\n");
-        sb.append("Donateur num : ");
-        sb.append(getId());
-        sb.append("\n");
-        sb.append("Name : ");
-        sb.append(getNom());
-        sb.append(" ");
-        sb.append(getPrenom());
-
+        sb.append("\t").append("Donateur numero ").append(getId()).append("\n");
+        sb.append("\t").append(getPrenom()).append(" ").append(getNom()).append(" a fait un don de ").append(getSomme()).append(getMonnaie()).append("\n");
         return sb.toString();
 
     }

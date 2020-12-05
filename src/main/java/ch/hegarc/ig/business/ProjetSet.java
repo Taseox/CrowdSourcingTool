@@ -30,9 +30,6 @@ public class ProjetSet {
         for (Projet p : this.projets) {
             if (p.getName().equalsIgnoreCase(nom)) {
                 projet = p;
-
-            }else{
-                System.out.printf("FAIL");
             }
         }
         return projet;
@@ -42,6 +39,10 @@ public class ProjetSet {
     public Set<Projet> getList () {
             return this.projets;
         }
+
+    public List<Projet> toList () {
+        return new LinkedList <> (this.projets);
+    }
 
     public String toString(){
         StringBuilder sb = new StringBuilder();

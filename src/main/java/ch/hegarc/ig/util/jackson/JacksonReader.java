@@ -23,9 +23,7 @@ public class JacksonReader {
 
             Set<Projet> projets = om.readValue(new File(filename), new TypeReference<Set<Projet>>() {
             });
-            for (Projet p : projets) {
-                System.out.println(p.toString());
-            }
+
         return projets;
     }
 }

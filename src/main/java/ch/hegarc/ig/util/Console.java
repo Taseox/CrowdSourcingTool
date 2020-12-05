@@ -47,11 +47,10 @@ public class Console {
                         try {
                             if (fileName.endsWith(".xml")) {
                                 this.projets.addProjets(JaxbUnmarshalling.run(fileName));
-                                this.projets.get("Alpha").toString();
-                                //System.out.println(projets.toString());
+                                System.out.println(projets.toString());
                             } else if (fileName.endsWith(".json")) {
                                 this.projets.addProjets(JacksonReader.run(fileName));
-                                //System.out.println(projets.toString());
+                                System.out.println(projets.toString());
                             }
                         } catch (Exception E){
                             E.printStackTrace();
@@ -67,14 +66,13 @@ public class Console {
                         String fileName = cmdLine.getOptionValue(OPT_FICHIER.getOpt());
                         String projectName = cmdLine.getOptionValue(OPT_PROJET.getOpt());
                         // TODO Export du fichier JSON
-
-                        if(projectName.equalsIgnoreCase("All")){
+                        if(projets.get(projectName) == null) {
+                            System.out.println("Le projet " + projectName + "n'existe pas");
+                        } else if(projectName.equalsIgnoreCase("All")){
                             System.out.println("Export de tous les projets.");
-                            for(Projet p : projets.getList()){
-                                JacksonWriter.run(p.getName(),"donations.json");
-                            }
+                            JacksonWriter.run(this.projets.toList(), fileName);
                         }else{
-                            JacksonWriter.run(projectName, fileName);
+                            JacksonWriter.run(projets.get(projectName), fileName);
                         }
                     } else {
                         printAppHelp();
