@@ -144,6 +144,5 @@ public class Donateur {
         sb.append("\t").append("Donateur numero ").append(getId()).append("\n");
         sb.append("\t").append(getPrenom()).append(" ").append(getNom()).append(" a fait un don de ").append(getSomme()).append(getMonnaie()).append("\n");
         return sb.toString();
-
     }
 }

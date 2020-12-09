@@ -8,9 +8,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,16 +31,19 @@ public class JaxbUnmarshalling {
             JAXBElement<Dataset> o = unmarshaller.unmarshal(in, Dataset.class);
 
             Dataset dataset = o.getValue();
-            Set<Projet> projets = new HashSet<>();
+            Set<Projet> projets = new TreeSet<>();
 
             for (Dataset.Record r : dataset.getRecord()) {
                 Projet projet = new Projet(r.getId(), r.getName(), new HashSet<>());
+
                 for (Dataset.Record.Donateurs d : r.getDonateurs()){
                     Donateur donateur = new Donateur(d.getId(), d.getPrenom(), d.getNom(), d.getEmail(), d.getLangue(), d.getAdresse(), d.getVille(), d.getMonnaie(), d.getSomme(), d.getPaye(), d.getAnnule(), d.getDateDon(), d.getDateVersement());
                     projet.getDonateurs().add(donateur);
                 }
                 projets.add(projet);
+
             }
-            return projets;
+            HashSet returnSet = new HashSet(projets);
+            return returnSet;
     }
 }

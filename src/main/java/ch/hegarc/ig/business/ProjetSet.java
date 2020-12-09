@@ -13,7 +13,7 @@ public class ProjetSet {
     private Set<Projet> projets;
 
     public ProjetSet(){
-        this.projets = new HashSet<>();
+        this.projets = new TreeSet<>();
     }
 
     public void addProjets (Set<Projet> projets) {
@@ -43,6 +43,7 @@ public class ProjetSet {
     public List<Projet> toList () {
         return new LinkedList <> (this.projets);
     }
+
 
     public String toString(){
         StringBuilder sb = new StringBuilder();

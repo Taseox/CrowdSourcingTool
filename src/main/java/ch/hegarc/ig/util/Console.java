@@ -41,7 +41,6 @@ public class Console {
 
                 case CMD_IMPORT:
                     if (cmdLine.hasOption(OPT_FICHIER.getOpt())) {
-                        //TODO : fusion des fichiers
                         String fileName = cmdLine.getOptionValue(OPT_FICHIER.getOpt());
                         System.out.println("Import du fichier " + fileName);
                         try {
@@ -65,7 +64,6 @@ public class Console {
 
                         String fileName = cmdLine.getOptionValue(OPT_FICHIER.getOpt());
                         String projectName = cmdLine.getOptionValue(OPT_PROJET.getOpt());
-                        // TODO Export du fichier JSON
                         if(projets.get(projectName) == null) {
                             System.out.println("Le projet " + projectName + "n'existe pas");
                         } else if(projectName.equalsIgnoreCase("All")){
