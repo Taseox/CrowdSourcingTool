@@ -189,6 +189,9 @@ public class Console {
         formatter.printHelp(CMD_IMPORT, new Options().addOption(OPT_FICHIER), true);
         formatter.printHelp(CMD_EXPORT, new Options().addOption(OPT_FICHIER).addOption(OPT_PROJET), true);
         formatter.printHelp(CMD_STATS, new Options().addOption(OPT_PROJET), true);
+        formatter.printHelp(CMD_ADDDONATEUR, new Options().addOption(OPT_NOM).addOption(OPT_PRENOM).addOption(OPT_SOMME), true);
+        formatter.printHelp(CMD_REMOVEDONATEUR, new Options().addOption(OPT_NOM).addOption(OPT_PRENOM), true);
+
         formatter.printHelp(CMD_EXIT, new Options());
     }
 }
