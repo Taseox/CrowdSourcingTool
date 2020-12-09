@@ -1,5 +1,6 @@
 package ch.hegarc.ig.util;
 
+import ch.hegarc.ig.business.Donateur;
 import ch.hegarc.ig.business.Projet;
 import ch.hegarc.ig.business.ProjetSet;
 import ch.hegarc.ig.util.jackson.JacksonReader;
@@ -20,9 +21,14 @@ public class Console {
     final private String CMD_EXPORT = "export";
     final private String CMD_STATS = "stats";
     final private String CMD_EXIT = "exit";
+    final private String CMD_ADDDONATEUR = "add";
 
     final private Option OPT_FICHIER = new Option("f", "fichier", true, "nom du fichier");
     final private Option OPT_PROJET = new Option("p", "projet", true, "nom du projet");
+    final private Option OPT_NOM = new Option("n", "nom", true, "nom du donateur");
+    final private Option OPT_PRENOM = new Option("pr", "prenom", true, "prenom du donateur");
+    final private Option OPT_SOMME = new Option("s", "somme", true, "somme donnee");
+
 
     /**
      * Démarre la commande
@@ -81,6 +87,27 @@ public class Console {
 
                     // TODO Calcule des stats des projets
 
+                    break;
+
+                case CMD_ADDDONATEUR:
+
+                    if (cmdLine.hasOption(OPT_PROJET.getOpt()) && cmdLine.hasOption(OPT_NOM.getOpt()) && cmdLine.hasOption(OPT_PRENOM.getOpt()) && cmdLine.hasOption(OPT_SOMME.getOpt())){
+                        try{
+                            Projet projet = projets.get(cmdLine.getOptionValue(OPT_PROJET.getOpt()));
+                            Donateur donateur = new Donateur();
+                            donateur.setNom(cmdLine.getOptionValue(OPT_NOM.getOpt()));
+                            donateur.setPrenom(cmdLine.getOptionValue(OPT_PRENOM.getOpt()));
+                            donateur.setSomme(Long.parseLong(cmdLine.getOptionValue(OPT_SOMME.getOpt())));
+                            projet.getDonateurs().add(donateur);
+                            projets.addProjet(projet);
+                            System.out.println("Donateur ajouté au projet avec succès!");
+                        }catch (Exception E){
+                            E.printStackTrace();
+                        }
+
+                    }else {
+                        printAppHelp();
+                    }
                     break;
 
                 case CMD_EXIT:
