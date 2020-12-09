@@ -22,6 +22,8 @@ public class Console {
     final private String CMD_STATS = "stats";
     final private String CMD_EXIT = "exit";
     final private String CMD_ADDDONATEUR = "add";
+    final private String CMD_REMOVEDONATEUR = "remove";
+
 
     final private Option OPT_FICHIER = new Option("f", "fichier", true, "nom du fichier");
     final private Option OPT_PROJET = new Option("p", "projet", true, "nom du projet");
@@ -101,6 +103,24 @@ public class Console {
                             projet.getDonateurs().add(donateur);
                             projets.addProjet(projet);
                             System.out.println("Donateur ajouté au projet avec succès!");
+                        }catch (Exception E){
+                            E.printStackTrace();
+                        }
+
+                    }else {
+                        printAppHelp();
+                    }
+                    break;
+
+                case CMD_REMOVEDONATEUR:
+
+                    if (cmdLine.hasOption(OPT_PROJET.getOpt()) && cmdLine.hasOption(OPT_NOM.getOpt()) && cmdLine.hasOption(OPT_PRENOM.getOpt())){
+                        try{
+                            Projet projet = projets.get(cmdLine.getOptionValue(OPT_PROJET.getOpt()));
+                            String nom = cmdLine.getOptionValue(OPT_NOM.getOpt());
+                            String prenom = cmdLine.getOptionValue(OPT_PRENOM.getOpt());
+                            projet.removeDonateur(nom, prenom);
+                            System.out.println("Donateur supprimé du projet projet avec succès!");
                         }catch (Exception E){
                             E.printStackTrace();
                         }

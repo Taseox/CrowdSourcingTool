@@ -69,6 +69,15 @@ public class Projet implements Comparable<Projet>{
         return donateurs;
     }
 
+    public void removeDonateur(String lastName, String firstName) {
+        for(Donateur d : donateurs){
+            if (d.getNom().equalsIgnoreCase(lastName) && d.getPrenom().equalsIgnoreCase(firstName)){
+                donateurs.remove(d);
+            }
+        }
+    }
+
+
     @Override
     public int compareTo(Projet p) {
         return this.getName().compareTo(p.getName());
