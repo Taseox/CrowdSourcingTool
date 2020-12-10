@@ -54,11 +54,13 @@ public class Console {
                         try {
                             if (fileName.endsWith(".xml")) {
                                 this.projets.addProjets(JaxbUnmarshalling.run(fileName));
-                                System.out.println(projets.toString());
                             } else if (fileName.endsWith(".json")) {
                                 this.projets.addProjets(JacksonReader.run(fileName));
-                                System.out.println(projets.toString());
                             }
+                            for (Projet p : projets.getList()){
+                                p.trierDonateurs();
+                            }
+                            System.out.println(projets.toString());
                         } catch (Exception E){
                             E.printStackTrace();
                         }
@@ -95,14 +97,22 @@ public class Console {
 
                     if (cmdLine.hasOption(OPT_PROJET.getOpt()) && cmdLine.hasOption(OPT_NOM.getOpt()) && cmdLine.hasOption(OPT_PRENOM.getOpt()) && cmdLine.hasOption(OPT_SOMME.getOpt())){
                         try{
-                            Projet projet = projets.get(cmdLine.getOptionValue(OPT_PROJET.getOpt()));
+                            String projectName = cmdLine.getOptionValue(OPT_PROJET.getOpt());
+                            String nom = cmdLine.getOptionValue(OPT_NOM.getOpt());
+                            String prenom = cmdLine.getOptionValue(OPT_PRENOM.getOpt());
+                            Long somme = Long.parseLong(cmdLine.getOptionValue (OPT_SOMME.getOpt()));
+
+                            if(projets.get(projectName)==null){
+                                System.out.println("Projet inexistant!");
+                            }else{
                             Donateur donateur = new Donateur();
-                            donateur.setNom(cmdLine.getOptionValue(OPT_NOM.getOpt()));
-                            donateur.setPrenom(cmdLine.getOptionValue(OPT_PRENOM.getOpt()));
-                            donateur.setSomme(Long.parseLong(cmdLine.getOptionValue(OPT_SOMME.getOpt())));
-                            projet.getDonateurs().add(donateur);
-                            projets.addProjet(projet);
-                            System.out.println("Donateur ajouté au projet avec succès!");
+                            donateur.setNom(nom);
+                            donateur.setPrenom(prenom);
+                            donateur.setSomme(somme);
+                            donateur.setMonnaie("CHF");
+                            projets.get(projectName).addDonateur(donateur);
+                            System.out.println(projets.get(projectName).toString());
+                            }
                         }catch (Exception E){
                             E.printStackTrace();
                         }
@@ -120,7 +130,7 @@ public class Console {
                             String nom = cmdLine.getOptionValue(OPT_NOM.getOpt());
                             String prenom = cmdLine.getOptionValue(OPT_PRENOM.getOpt());
                             projet.removeDonateur(nom, prenom);
-                            System.out.println("Donateur supprimé du projet projet avec succès!");
+                            System.out.println(projets.get(cmdLine.getOptionValue(OPT_PROJET.getOpt())).toString());
                         }catch (Exception E){
                             E.printStackTrace();
                         }
@@ -137,6 +147,7 @@ public class Console {
 
                 default:
                     System.out.println("Commande non reconnue!");
+                    printAppHelp();
                     break;
             }
         }
@@ -177,7 +188,7 @@ public class Console {
     private Options getAllOptions() {
 
         Options options = new Options();
-        options.addOption(OPT_FICHIER).addOption(OPT_PROJET);
+        options.addOption(OPT_FICHIER).addOption(OPT_PROJET).addOption(OPT_SOMME).addOption(OPT_PRENOM).addOption(OPT_NOM);
         return options;
     }
 
@@ -189,8 +200,8 @@ public class Console {
         formatter.printHelp(CMD_IMPORT, new Options().addOption(OPT_FICHIER), true);
         formatter.printHelp(CMD_EXPORT, new Options().addOption(OPT_FICHIER).addOption(OPT_PROJET), true);
         formatter.printHelp(CMD_STATS, new Options().addOption(OPT_PROJET), true);
-        formatter.printHelp(CMD_ADDDONATEUR, new Options().addOption(OPT_NOM).addOption(OPT_PRENOM).addOption(OPT_SOMME), true);
-        formatter.printHelp(CMD_REMOVEDONATEUR, new Options().addOption(OPT_NOM).addOption(OPT_PRENOM), true);
+        formatter.printHelp(CMD_ADDDONATEUR, new Options().addOption(OPT_PROJET).addOption(OPT_NOM).addOption(OPT_PRENOM).addOption(OPT_SOMME), true);
+        formatter.printHelp(CMD_REMOVEDONATEUR, new Options().addOption(OPT_PROJET).addOption(OPT_NOM).addOption(OPT_PRENOM), true);
 
         formatter.printHelp(CMD_EXIT, new Options());
     }

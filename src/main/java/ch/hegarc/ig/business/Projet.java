@@ -14,7 +14,7 @@ public class Projet implements Comparable<Projet>{
     @JsonProperty("projet")
 
     private String name;
-    private Set<Donateur> donateurs = new HashSet<>();
+    private Set<Donateur> donateurs = new TreeSet<>();
 
     public Projet() {
     }
@@ -84,10 +84,33 @@ public class Projet implements Comparable<Projet>{
 
 
     public void removeDonateur(String lastName, String firstName) {
+        Donateur donateur = new Donateur();
         for(Donateur d : donateurs){
             if (d.getNom().equalsIgnoreCase(lastName) && d.getPrenom().equalsIgnoreCase(firstName)){
-                donateurs.remove(d);
+                donateur = d;
             }
+        }
+        if(donateur!=null){
+            donateurs.remove(donateur);
+            System.out.println("Donateur supprimé du projet avec succès!");
+        } else {
+            System.out.println("Donateur non existant dans ce projet!");
+        }
+    }
+
+    public void addDonateur(Donateur donateur) {
+        Boolean donateurExistant = false;
+        for(Donateur d : donateurs){
+            if (d.getNom().equalsIgnoreCase(donateur.getNom()) && d.getPrenom().equalsIgnoreCase(donateur.getPrenom())){
+                donateurExistant = true;
+            }
+        }
+        if(donateurExistant == false){
+            donateurs.add(donateur);
+            trierDonateurs();
+            System.out.println("Donateur ajouté au projet avec succès!");
+        } else {
+            System.out.println("Donateur déjà existant");
         }
     }
 
@@ -98,8 +121,13 @@ public class Projet implements Comparable<Projet>{
     }
 
     public void trierDonateurs () {
+        /*
         Stream<Donateur> stream = this.donateurs.stream().sorted(Comparator.comparing(Donateur::getNom).thenComparing(Donateur::getPrenom));
         this.donateurs = stream.collect(Collectors.toSet());
+        */
+
+        this.donateurs = this.donateurs.stream().sorted(Comparator.comparing(Donateur::getPrenom)).collect(Collectors.toSet());//.sorted(Comparator.comparing(Donateur::getNom).thenComparing(Donateur::getPrenom)).collect(Collectors.toSet());
+
     }
 
     public void setDonateurs(Set<Donateur> donateurs) {

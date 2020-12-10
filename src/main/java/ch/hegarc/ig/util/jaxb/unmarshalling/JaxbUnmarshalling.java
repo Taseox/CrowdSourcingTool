@@ -40,10 +40,10 @@ public class JaxbUnmarshalling {
                     Donateur donateur = new Donateur(d.getId(), d.getPrenom(), d.getNom(), d.getEmail(), d.getLangue(), d.getAdresse(), d.getVille(), d.getMonnaie(), d.getSomme(), d.getPaye(), d.getAnnule(), d.getDateDon(), d.getDateVersement());
                     projet.getDonateurs().add(donateur);
                 }
-                projets.add(projet);
+                projets.add(projet);;
 
             }
-            HashSet returnSet = new HashSet(projets);
+            TreeSet returnSet = new TreeSet(projets);
             return returnSet;
     }
 }

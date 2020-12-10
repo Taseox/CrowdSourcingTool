@@ -2,7 +2,7 @@ package ch.hegarc.ig.business;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Donateur {
+public class Donateur implements Comparable<Donateur> {
 
     private long id;
     @JsonProperty ("prenom")
@@ -145,4 +145,10 @@ public class Donateur {
         sb.append("\t").append(getPrenom()).append(" ").append(getNom()).append(" a fait un don de ").append(getSomme()).append(getMonnaie()).append("\n");
         return sb.toString();
     }
+
+    @Override
+    public int compareTo(Donateur donateur) {
+        return this.getPrenom().compareToIgnoreCase(donateur.getPrenom());// + this.getNom().compareToIgnoreCase(donateur.getNom());
+    }
+
 }
