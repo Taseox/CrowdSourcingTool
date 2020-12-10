@@ -69,6 +69,14 @@ public class Projet implements Comparable<Projet>{
         return donateurs;
     }
 
+    public Set<Donateur> get5Best()
+    {
+        Stream<Donateur> stream = donateurs.stream();
+        return stream.sorted(Comparator.comparing(Donateur::getSomme))
+                .limit(5).collect(Collectors.toSet());
+    }
+
+
     public void removeDonateur(String lastName, String firstName) {
         for(Donateur d : donateurs){
             if (d.getNom().equalsIgnoreCase(lastName) && d.getPrenom().equalsIgnoreCase(firstName)){
