@@ -76,6 +76,12 @@ public class Projet implements Comparable<Projet>{
                 .limit(5).collect(Collectors.toSet());
     }
 
+    public Set<Donateur> getNonPaye()
+    {
+        Stream<Donateur> stream = donateurs.stream();
+        return stream.filter(donateur -> donateur.getDateVersement().equalsIgnoreCase("")).collect(Collectors.toSet());
+    }
+
 
     public void removeDonateur(String lastName, String firstName) {
         for(Donateur d : donateurs){
