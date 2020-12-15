@@ -71,13 +71,13 @@ public class Console {
 
                         String fileName = cmdLine.getOptionValue(OPT_FICHIER.getOpt());
                         String projectName = cmdLine.getOptionValue(OPT_PROJET.getOpt());
-                        if(projets.getProjetName(projectName) == null) {
+                        if(projets.getProjectName(projectName) == null) {
                             System.out.println("Le projet " + projectName + "n'existe pas");
                         } else if(projectName.equalsIgnoreCase("All")){
                             System.out.println("Export de tous les projets.");
                             JacksonWriter.run(this.projets.toList(), fileName);
                         }else{
-                            JacksonWriter.run(projets.getProjetName(projectName), fileName);
+                            JacksonWriter.run(projets.getProjectName(projectName), fileName);
                         }
                     } else {
                         printAppHelp();
@@ -99,16 +99,20 @@ public class Console {
                             String prenom = cmdLine.getOptionValue(OPT_PRENOM.getOpt());
                             Long somme = Long.parseLong(cmdLine.getOptionValue (OPT_SOMME.getOpt()));
 
-                            if(projets.getProjetName(projectName)==null){
+                            if (projets.getProjectName(projectName)==null) {
                                 System.out.println("Projet inexistant!");
-                            }else{
-                            Donateur donateur = new Donateur();
-                            donateur.setNom(nom);
-                            donateur.setPrenom(prenom);
-                            donateur.setSomme(somme);
-                            donateur.setMonnaie("CHF");
-                            projets.getProjetName(projectName).addDonateur(donateur);
-                            System.out.println(projets.getProjetName(projectName).toString());
+                            } else {
+                                Donateur donateur = new Donateur();
+                                donateur.setNom(nom);
+                                donateur.setPrenom(prenom);
+                                donateur.setSomme(somme);
+                                donateur.setMonnaie("CHF");
+                                if (projets.getProjectName(projectName).addDonateur(donateur)) {
+                                    System.out.println("Donateur ajouté au projet avec succès!");
+                                } else {
+                                    System.out.println("Donateur déjà existant");
+                                }
+                                System.out.println(projets.getProjectName(projectName).toString());
                             }
                         }catch (Exception E){
                             E.printStackTrace();
@@ -123,11 +127,15 @@ public class Console {
 
                     if (cmdLine.hasOption(OPT_PROJET.getOpt()) && cmdLine.hasOption(OPT_NOM.getOpt()) && cmdLine.hasOption(OPT_PRENOM.getOpt())){
                         try{
-                            Projet projet = projets.getProjetName(cmdLine.getOptionValue(OPT_PROJET.getOpt()));
+                            Projet projet = projets.getProjectName(cmdLine.getOptionValue(OPT_PROJET.getOpt()));
                             String nom = cmdLine.getOptionValue(OPT_NOM.getOpt());
                             String prenom = cmdLine.getOptionValue(OPT_PRENOM.getOpt());
-                            projet.removeDonateur(nom, prenom);
-                            System.out.println(projets.getProjetName(cmdLine.getOptionValue(OPT_PROJET.getOpt())).toString());
+                            if(projet.removeDonateur(nom, prenom)) {
+                                System.out.println("Donateur supprimé du projet avec succès!");
+                            } else {
+                                System.out.println("Donateur non existant dans ce projet!");
+                            }
+                            System.out.println(projets.getProjectName(cmdLine.getOptionValue(OPT_PROJET.getOpt())).toString());
                         }catch (Exception E){
                             E.printStackTrace();
                         }

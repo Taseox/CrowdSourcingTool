@@ -74,38 +74,29 @@ public class Projet implements Comparable<Projet>{
             addDonateur(donateur);
     }
 
-    public void removeDonateur(String lastName, String firstName) {
-        Donateur donateur = new Donateur();
+    public Boolean removeDonateur(String lastName, String firstName) {
+        Donateur donateurTest = new Donateur(firstName, lastName);
+        Donateur donateurToDelete = new Donateur();
         for(Donateur d : donateurs){
-            if (d.getNom().equalsIgnoreCase(lastName) && d.getPrenom().equalsIgnoreCase(firstName)){
-                donateur = d;
+            if(d.equals(donateurTest)) {
+                donateurToDelete = d;
             }
         }
-        if(donateur!=null) {
-            donateurs.remove(donateur);
-        }/*
-            System.out.println("Donateur supprimé du projet avec succès!");
-        } else {
-            System.out.println("Donateur non existant dans ce projet!");
-        }*/
+
+        return donateurs.remove(donateurToDelete);
     }
 
-    public void addDonateur(Donateur donateur) {
-        Boolean donateurExistant = false;
+    public boolean addDonateur(Donateur donateur) {
+        boolean donateurExistant = false;
         for(Donateur d : donateurs){
-            if (d.equals(donateur)){
+            if (d.equals(donateur))
                 donateurExistant = true;
-            }
         }
         if(donateurExistant == false) {
             donateurs.add(donateur);
             trierDonateurs();
         }
-         /*
-            System.out.println("Donateur ajouté au projet avec succès!");
-        } else {
-            System.out.println("Donateur déjà existant");
-        }*/
+        return !donateurExistant;
     }
 
     @Override

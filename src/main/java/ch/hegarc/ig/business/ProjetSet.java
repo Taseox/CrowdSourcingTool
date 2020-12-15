@@ -22,7 +22,7 @@ public class ProjetSet {
     }
 
     public void addProjet(Projet projet) {
-        Projet projetExisant = this.getProjetName(projet.getName());
+        Projet projetExisant = this.getProjectName(projet.getName());
         if (projetExisant.getName() == null) {
             projet.trierDonateurs();
             this.projets.add(projet);
@@ -32,15 +32,8 @@ public class ProjetSet {
 
     }
 
-/*
-    public void addDonateursProjet(Projet projet) {
-        for (Donateur donateur : projet.getDonateurs())
-            this.projets.addDonateur(donateur);
-        projet.trierDonateurs();
 
-    }*/
-
-    public Projet getProjetName(String nom){
+    public Projet getProjectName(String nom){
         Projet projet = new Projet();
         for (Projet p : this.projets) {
             if (p.getName().equalsIgnoreCase(nom)) {

@@ -50,6 +50,12 @@ public class Donateur {
         this.dateVersement = dateVersement;
     }
 
+    public Donateur(String prenom, String nom) {
+        super();
+        this.prenom = prenom;
+        this.nom = nom;
+    }
+
     public long getId() {
         return id;
     }
