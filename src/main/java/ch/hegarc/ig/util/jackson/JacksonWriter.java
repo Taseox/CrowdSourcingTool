@@ -45,7 +45,7 @@ public class JacksonWriter {
 //			Ecriture avec pretty print
             om.writerWithDefaultPrettyPrinter ().writeValue (new File (fileName), projets);
 
-            logger.log (Level.INFO, "Fichier '" + fileName + "' crée avec succès !");
+            logger.log (Level.INFO, "Fichier '" + fileName + "' créé avec succès !");
 
         } catch (IOException ex) {
             logger.log (Level.SEVERE, null, ex);

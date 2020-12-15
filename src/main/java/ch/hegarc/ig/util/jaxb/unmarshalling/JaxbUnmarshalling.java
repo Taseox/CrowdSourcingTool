@@ -34,7 +34,7 @@ public class JaxbUnmarshalling {
             Set<Projet> projets = new TreeSet<>();
 
             for (Dataset.Record r : dataset.getRecord()) {
-                Projet projet = new Projet(r.getId(), r.getName(), new HashSet<>());
+                Projet projet = new Projet(r.getId(), r.getName(), new LinkedList<>());
 
                 for (Dataset.Record.Donateurs d : r.getDonateurs()){
                     Donateur donateur = new Donateur(d.getId(), d.getPrenom(), d.getNom(), d.getEmail(), d.getLangue(), d.getAdresse(), d.getVille(), d.getMonnaie(), d.getSomme(), d.getPaye(), d.getAnnule(), d.getDateDon(), d.getDateVersement());

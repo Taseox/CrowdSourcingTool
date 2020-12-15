@@ -17,15 +17,30 @@ public class ProjetSet {
     }
 
     public void addProjets (Set<Projet> projets) {
-        for (Projet p : projets)
-            this.addProjet(p);
+        for (Projet projet : projets)
+            this.addProjet(projet);
     }
 
-    public void addProjet (Projet projet) {
-        this.projets.add(projet);
+    public void addProjet(Projet projet) {
+        Projet projetExisant = this.getProjetName(projet.getName());
+        if (projetExisant.getName() == null) {
+            projet.trierDonateurs();
+            this.projets.add(projet);
+        } else {
+            projetExisant.addDonateurs(projet.getDonateurs());
+        }
+
     }
 
-    public Projet get(String nom){
+/*
+    public void addDonateursProjet(Projet projet) {
+        for (Donateur donateur : projet.getDonateurs())
+            this.projets.addDonateur(donateur);
+        projet.trierDonateurs();
+
+    }*/
+
+    public Projet getProjetName(String nom){
         Projet projet = new Projet();
         for (Projet p : this.projets) {
             if (p.getName().equalsIgnoreCase(nom)) {

@@ -14,7 +14,7 @@ public class Projet implements Comparable<Projet>{
     @JsonProperty("projet")
 
     private String name;
-    private Set<Donateur> donateurs = new TreeSet<>();
+    private List<Donateur> donateurs = new LinkedList<>();
 
     public Projet() {
     }
@@ -24,7 +24,7 @@ public class Projet implements Comparable<Projet>{
      * @param name
      * @param id
      */
-    public Projet(long id, String name, Set<Donateur> donateurs) {
+    public Projet(long id, String name, List<Donateur> donateurs) {
         super();
         this.id = id;
         this.name = name;
@@ -36,19 +36,6 @@ public class Projet implements Comparable<Projet>{
         this.name = projetName;
     }
 
-/*    public static Projet newPopulatedProjet(String projetName){
-        Projet projet = new Projet(projetName);
-        projet.getDonateurs().add(new Donateur(1, "Guy", "Lafontaine", "lafontaine.guy@gmail.com", "FR", "testadresse", "testville", "CHF", 1000, true, false, "29.11.1992","29.11.1992"));
-        projet.getDonateurs().add(new Donateur(2, "Haha", "Lafontaine", "lafontaine.haha@gmail.com", "FR", "testadresse", "testville", "CHF", 1000, true, false, "29.11.1992","29.11.1992"));
-
-        return projet;
-    }
-
-
-    public Projet getProjet() {
-        return this;
-    }
-*/
     public long getId() {
         return id;
     }
@@ -65,23 +52,27 @@ public class Projet implements Comparable<Projet>{
         this.name = name;
     }
 
-    public Set<Donateur> getDonateurs() {
+    public List<Donateur> getDonateurs() {
         return donateurs;
     }
 
-    public Set<Donateur> get5Best()
+    public List<Donateur> get5Best()
     {
         Stream<Donateur> stream = donateurs.stream();
         return stream.sorted(Comparator.comparing(Donateur::getSomme))
-                .limit(5).collect(Collectors.toSet());
+                .limit(5).collect(Collectors.toList());
     }
 
-    public Set<Donateur> getNonPaye()
+    public List<Donateur> getNonPaye()
     {
         Stream<Donateur> stream = donateurs.stream();
-        return stream.filter(donateur -> donateur.getDateVersement().equalsIgnoreCase("")).collect(Collectors.toSet());
+        return stream.filter(donateur -> donateur.getDateVersement().equalsIgnoreCase("")).collect(Collectors.toList());
     }
 
+    public void addDonateurs(List<Donateur> donateurs) {
+        for (Donateur donateur : donateurs)
+            addDonateur(donateur);
+    }
 
     public void removeDonateur(String lastName, String firstName) {
         Donateur donateur = new Donateur();
@@ -90,30 +81,32 @@ public class Projet implements Comparable<Projet>{
                 donateur = d;
             }
         }
-        if(donateur!=null){
+        if(donateur!=null) {
             donateurs.remove(donateur);
+        }/*
             System.out.println("Donateur supprimé du projet avec succès!");
         } else {
             System.out.println("Donateur non existant dans ce projet!");
-        }
+        }*/
     }
 
     public void addDonateur(Donateur donateur) {
         Boolean donateurExistant = false;
         for(Donateur d : donateurs){
-            if (d.getNom().equalsIgnoreCase(donateur.getNom()) && d.getPrenom().equalsIgnoreCase(donateur.getPrenom())){
+            if (d.equals(donateur)){
                 donateurExistant = true;
             }
         }
-        if(donateurExistant == false){
+        if(donateurExistant == false) {
             donateurs.add(donateur);
             trierDonateurs();
+        }
+         /*
             System.out.println("Donateur ajouté au projet avec succès!");
         } else {
             System.out.println("Donateur déjà existant");
-        }
+        }*/
     }
-
 
     @Override
     public int compareTo(Projet p) {
@@ -121,17 +114,7 @@ public class Projet implements Comparable<Projet>{
     }
 
     public void trierDonateurs () {
-        /*
-        Stream<Donateur> stream = this.donateurs.stream().sorted(Comparator.comparing(Donateur::getNom).thenComparing(Donateur::getPrenom));
-        this.donateurs = stream.collect(Collectors.toSet());
-        */
-
-        this.donateurs = this.donateurs.stream().sorted(Comparator.comparing(Donateur::getPrenom)).collect(Collectors.toSet());//.sorted(Comparator.comparing(Donateur::getNom).thenComparing(Donateur::getPrenom)).collect(Collectors.toSet());
-
-    }
-
-    public void setDonateurs(Set<Donateur> donateurs) {
-        this.donateurs = donateurs;
+        this.donateurs = this.donateurs.stream().sorted(Comparator.comparing(Donateur::getNom).thenComparing(Donateur::getPrenom)).collect(Collectors.toList());
     }
 
     @Override
