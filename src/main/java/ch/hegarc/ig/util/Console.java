@@ -78,6 +78,7 @@ public class Console {
                             JacksonWriter.run(this.projets.toList(), fileName);
                         }else{
                             JacksonWriter.run(projets.getProjectName(projectName), fileName);
+                            System.out.println(projets.getMedianeEtMoyenne(projets.getProjectName(projectName)));
                         }
                     } else {
                         printAppHelp();

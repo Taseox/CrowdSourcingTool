@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class ProjetSet {
     private Set<Projet> projets;
@@ -42,6 +43,69 @@ public class ProjetSet {
         }
         return projet;
     }
+
+    public void getProjetDonationInfo(Projet projet){
+        Long sommeTotal = Long.valueOf(0);
+        Long sommePayee = Long.valueOf(0);
+        Long sommeRestante = Long.valueOf(0);
+
+        for(Donateur d : projet.getDonateurs()){
+            if(d.getDateVersement()==null){
+              sommeRestante=+d.getSomme();
+            }else {
+                sommePayee=+d.getSomme();
+            }
+        }
+        sommeTotal=sommePayee+sommeRestante;
+
+        System.out.println("Somme déjà payée : " + sommePayee);
+        System.out.println("Somme restante à payer : " + sommeRestante);
+        System.out.println("Somme totale : " + sommeTotal);
+    }
+
+    public String getDonateurMail(Projet projet){
+        StringBuilder sb = new StringBuilder("");
+        for(Donateur d : projet.getDonateurs()) {
+            if(d.getEmail()!=null) {
+                sb.append(d.getEmail());
+                sb.append(";");
+                sb.append("\n");
+            }
+        }
+        return sb.toString();
+    }
+
+    public String getMedianeEtMoyenne(Projet projet){
+        Long total = Long.valueOf(0);
+        int nbDonateurs = 0;
+        Long moyenne = Long.valueOf(0);
+        StringBuilder sb = new StringBuilder("");
+        for(Donateur d : projet.getDonateurs()) {
+            total=+d.getSomme();
+            nbDonateurs=+1;
+        }
+        moyenne=total/nbDonateurs;
+        List<Donateur> list = projet.getDonateurs();
+        list.sort(Comparator.comparingDouble(Donateur::getSomme));
+        double mediane = list.get(list.size()/2).getSomme();
+        if(list.size()%2 == 0) mediane = (mediane + list.get(list.size()/2-1).getSomme()) / 2;
+
+        sb.append("Somme moyenne des dons : ");
+        sb.append(moyenne);
+        sb.append("\n");
+        sb.append("Somme médiane des dons : ");
+        sb.append(mediane);
+        return sb.toString();
+    }
+
+    public Long getComission(Projet projet){
+        Long comission = Long.valueOf(0);
+        for(Donateur d : projet.getDonateurs()){
+            comission=+((d.getSomme()/100)*5);
+        }
+        return comission;
+    }
+
 
 
     public Set<Projet> getList () {

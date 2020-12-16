@@ -69,6 +69,24 @@ public class Projet implements Comparable<Projet>{
         return stream.filter(donateur -> donateur.getDateVersement().equalsIgnoreCase("")).collect(Collectors.toList());
     }
 
+
+    public Long getNamelistDonations(String nameList){
+        Long somme = Long.valueOf(0);
+        List<String> tokens = new ArrayList<>();
+        StringTokenizer tokenizer = new StringTokenizer(nameList, ";");
+        while (tokenizer.hasMoreElements()) {
+            tokens.add(tokenizer.nextToken());
+        }
+        for(String s: tokens){
+            for(Donateur d : donateurs){
+                if (d.getNom().equals(s)){
+                    somme=+d.getSomme();
+                }
+            }
+        }
+        return somme;
+    }
+
     public void addDonateurs(List<Donateur> donateurs) {
         for (Donateur donateur : donateurs)
             addDonateur(donateur);
