@@ -86,9 +86,18 @@ public class Console {
                     break;
 
                 case CMD_STATS:
+                    if (cmdLine.hasOption(OPT_FICHIER.getOpt()) && cmdLine.hasOption(OPT_PROJET.getOpt())) {
+                        String fileName = cmdLine.getOptionValue(OPT_FICHIER.getOpt());
+                        String projectName = cmdLine.getOptionValue(OPT_PROJET.getOpt());
+                        try{
 
-                    // TODO Calcule des stats des projets
+                        }catch(Exception E){
+                            E.printStackTrace();
 
+                        }
+                    } else {
+                        printAppHelp();
+                    }
                     break;
 
                 case CMD_ADDDONATEUR:

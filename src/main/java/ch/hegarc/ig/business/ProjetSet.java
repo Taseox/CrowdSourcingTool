@@ -5,6 +5,7 @@ import ch.hegarc.ig.util.jackson.JacksonWriter;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.org.apache.xpath.internal.operations.String;
 
 import java.io.File;
 import java.util.*;
@@ -13,11 +14,11 @@ import java.util.stream.Stream;
 public class ProjetSet {
     private Set<Projet> projets;
 
-    public ProjetSet(){
+    public ProjetSet() {
         this.projets = new TreeSet<>();
     }
 
-    public void addProjets (Set<Projet> projets) {
+    public void addProjets(Set<Projet> projets) {
         for (Projet projet : projets)
             this.addProjet(projet);
     }
@@ -34,7 +35,7 @@ public class ProjetSet {
     }
 
 
-    public Projet getProjectName(String nom){
+    public Projet getProjectName(String nom) {
         Projet projet = new Projet();
         for (Projet p : this.projets) {
             if (p.getName().equalsIgnoreCase(nom)) {
@@ -44,85 +45,114 @@ public class ProjetSet {
         return projet;
     }
 
-    public void getProjetDonationInfo(Projet projet){
+    public void getProjetDonationInfo(Projet projet) {
         Long sommeTotal = Long.valueOf(0);
         Long sommePayee = Long.valueOf(0);
         Long sommeRestante = Long.valueOf(0);
 
-        for(Donateur d : projet.getDonateurs()){
-            if(d.getDateVersement()==null){
-              sommeRestante=+d.getSomme();
-            }else {
-                sommePayee=+d.getSomme();
+        for (Donateur d : projet.getDonateurs()) {
+            if (d.getDateVersement() == null) {
+                sommeRestante = +d.getSomme();
+            } else {
+                sommePayee = +d.getSomme();
             }
         }
-        sommeTotal=sommePayee+sommeRestante;
+        sommeTotal = sommePayee + sommeRestante;
 
-        System.out.println("Somme déjà payée : " + sommePayee);
-        System.out.println("Somme restante à payer : " + sommeRestante);
-        System.out.println("Somme totale : " + sommeTotal);
+        System.out.println("Somme déjà payée : " + getSommePayeeProjet(projet));
+        System.out.println("Somme restante à payer : " + getSommeRestanteProjet(projet));
+        System.out.println("Somme totale : " + getSommeTotaleProjet(projet));
     }
 
-    public String getDonateurMail(Projet projet){
-        StringBuilder sb = new StringBuilder("");
-        for(Donateur d : projet.getDonateurs()) {
-            if(d.getEmail()!=null) {
-                sb.append(d.getEmail());
-                sb.append(";");
-                sb.append("\n");
+    public Long getSommePayeeProjet(Projet projet) {
+        Long sommePayee = Long.valueOf(0);
+        for (Donateur d : projet.getDonateurs()) {
+            if (d.getDateVersement() != null) {
+                sommePayee = +d.getSomme();
             }
         }
-        return sb.toString();
+        return sommePayee;
     }
 
-    public String getMedianeEtMoyenne(Projet projet){
-        Long total = Long.valueOf(0);
-        int nbDonateurs = 0;
-        Long moyenne = Long.valueOf(0);
-        StringBuilder sb = new StringBuilder("");
-        for(Donateur d : projet.getDonateurs()) {
-            total=+d.getSomme();
-            nbDonateurs=+1;
+    //Retourne le montant total des dons restant à payer (ceux qui n'ont pas encore de date de versement)
+    public Long getSommeRestanteProjet(Projet projet) {
+        Long sommeRestante = Long.valueOf(0);
+        for (Donateur d : projet.getDonateurs()) {
+            if (d.getDateVersement() == null) {
+                sommeRestante = +d.getSomme();
+            }
         }
-        moyenne=total/nbDonateurs;
-        List<Donateur> list = projet.getDonateurs();
-        list.sort(Comparator.comparingDouble(Donateur::getSomme));
-        double mediane = list.get(list.size()/2).getSomme();
-        if(list.size()%2 == 0) mediane = (mediane + list.get(list.size()/2-1).getSomme()) / 2;
+        return sommeRestante;
 
-        sb.append("Somme moyenne des dons : ");
-        sb.append(moyenne);
-        sb.append("\n");
-        sb.append("Somme médiane des dons : ");
-        sb.append(mediane);
-        return sb.toString();
     }
 
-    public Long getComission(Projet projet){
-        Long comission = Long.valueOf(0);
-        for(Donateur d : projet.getDonateurs()){
-            comission=+((d.getSomme()/100)*5);
+        public Long getSommeTotaleProjet (Projet projet){
+            Long sommeTotale = Long.valueOf(0);
+            for (Donateur d : projet.getDonateurs()) {
+                sommeTotale=+d.getSomme();
+            }
+            return sommeTotale;
         }
-        return comission;
-    }
+
+        public String getDonateurMail (Projet projet){
+            StringBuilder sb = new StringBuilder("");
+            for (Donateur d : projet.getDonateurs()) {
+                if (d.getEmail() != null) {
+                    sb.append(d.getEmail());
+                    sb.append(";");
+                    sb.append("\n");
+                }
+            }
+            return sb.toString();
+        }
+
+        public String getMedianeEtMoyenne (Projet projet){
+            Long total = Long.valueOf(0);
+            int nbDonateurs = 0;
+            Long moyenne = Long.valueOf(0);
+            StringBuilder sb = new StringBuilder("");
+            for (Donateur d : projet.getDonateurs()) {
+                total = +d.getSomme();
+                nbDonateurs = +1;
+            }
+            moyenne = total / nbDonateurs;
+            List<Donateur> list = projet.getDonateurs();
+            list.sort(Comparator.comparingDouble(Donateur::getSomme));
+            double mediane = list.get(list.size() / 2).getSomme();
+            if (list.size() % 2 == 0) mediane = (mediane + list.get(list.size() / 2 - 1).getSomme()) / 2;
+
+            sb.append("Somme moyenne des dons : ");
+            sb.append(moyenne);
+            sb.append("\n");
+            sb.append("Somme médiane des dons : ");
+            sb.append(mediane);
+            return sb.toString();
+        }
+
+        public Long getComission (Projet projet){
+            Long comission = Long.valueOf(0);
+            for (Donateur d : projet.getDonateurs()) {
+                comission = +((d.getSomme() / 100) * 5);
+            }
+            return comission;
+        }
 
 
-
-    public Set<Projet> getList () {
+        public Set<Projet> getList () {
             return this.projets;
         }
 
-    public List<Projet> toList () {
-        return new LinkedList <> (this.projets);
-    }
+        public List<Projet> toList () {
+            return new LinkedList<>(this.projets);
+        }
 
 
-    public String toString(){
-        StringBuilder sb = new StringBuilder();
-        for(Projet p : this.projets)
-            sb.append(p.toString());
+        public String toString () {
+            StringBuilder sb = new StringBuilder();
+            for (Projet p : this.projets)
+                sb.append(p.toString());
 
-        return sb.toString();
+            return sb.toString();
         }
     }
 
