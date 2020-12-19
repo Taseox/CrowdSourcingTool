@@ -2,15 +2,17 @@ package ch.hegarc.ig.util.StatsUtils;
 
 import ch.hegarc.ig.business.Projet;
 import ch.hegarc.ig.business.ProjetSet;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
+import org.apache.poi.xssf.usermodel.*;
 import java.io.*;
-import java.util.*;
 
 public class ExportXls {
+    final private static String NomProjet = "Projet (nom)";
+    final private static String Paye = "Total payé";
+    final private static String Recevoir = "Total à recevoir";
+    final private static String Global = "Total global";
+    final private static String NbDons = "Nombre de don (non-annulé)";
+    final private static String Moyenne = "Moyenne des dons";
+
     private static int rowNb = 0;
     private static int colNb = 0;
     private static XSSFRow row;
@@ -19,115 +21,93 @@ public class ExportXls {
     private static XSSFWorkbook wb = new XSSFWorkbook();
     private static XSSFSheet sheet ;
 
-    public static void run(ProjetSet projetSet, String filename) {
+    public static void statsProjets(ProjetSet projetSet, String filename) {
 
-        // Nouveau document, nouvel onglet
         sheet = wb.createSheet(String.valueOf(projetSet.hashCode()));
-/*
-        int rowNb = 0;
-        int colNb = 0;
-        */
-
         row = sheet.createRow(rowNb);
-        XSSFCell cell;
 
-
-        addLine("Projet (nom)", projetSet);
-
-
-
-        cell = row.createCell(colNb);
-        cell.setCellValue("Projet (nom)");
-        colNb++;
-        //Noms des projets
-        for (Projet p : projetSet.toList()) {
-            cell = row.createCell(colNb);
-            cell.setCellValue(p.getName());
-            colNb++;
-        }
+        addLineProjets(NomProjet, projetSet);
+        addLineProjets(Paye, projetSet);
+        addLineProjets(Recevoir, projetSet);
+        addLineProjets(Global, projetSet);
         row = sheet.createRow(++rowNb);
+        addLineProjets(NbDons, projetSet);
+        addLineProjets(Moyenne, projetSet);
 
-
-        //Total payé
-        colNb = 0;
-        cell = row.createCell(colNb);
-        cell.setCellValue("Total payé");
-        colNb++;
-        for (Projet p : projetSet.toList()) {
-            cell = row.createCell(colNb);
-            cell.setCellValue(p.getSommePayeeProjet());
-            colNb++;
+        try (OutputStream fileOut = new FileOutputStream(filename)) {
+            wb.write(fileOut);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+
+    public static void statsProjet(Projet projet, String filename) {
+        sheet = wb.createSheet(String.valueOf(projet.hashCode()));
+        row = sheet.createRow(rowNb);
+
+        addLineProjet(NomProjet, projet);
+        addLineProjet(Paye, projet);
+        addLineProjet(Recevoir, projet);
+        addLineProjet(Global, projet);
         row = sheet.createRow(++rowNb);
+        addLineProjet(NbDons, projet);
+        addLineProjet(Moyenne, projet);
 
-        //Total à recevoir
-        colNb = 0;
-        cell = row.createCell(colNb);
-        cell.setCellValue("Total à recevoir");
-        colNb++;
-        for (Projet p : projetSet.toList()) {
-            cell = row.createCell(colNb);
-            cell.setCellValue(p.getSommeRestanteProjet());
-            colNb++;
+        try (OutputStream fileOut = new FileOutputStream(filename)) {
+            wb.write(fileOut);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        row = sheet.createRow(++rowNb);
+    }
 
-        //Total final
-        colNb = 0;
-        cell = row.createCell(colNb);
-        cell.setCellValue("Total");
-        colNb++;
-        for (Projet p : projetSet.toList()) {
-            cell = row.createCell(colNb);
-            cell.setCellValue(p.getSommeTotaleProjet());
-            colNb++;
-        }
-        row = sheet.createRow(rowNb+=2);
-
-        //Nombre de dons (non-annulés)
-        colNb = 0;
-        cell = row.createCell(colNb);
-        cell.setCellValue("Nombre de don (non-annulé)");
-        colNb++;
-        for (Projet p : projetSet.toList()) {
-            cell = row.createCell(colNb);
-            cell.setCellValue(p.getNbDonsNonAnnuleProjet());
-            colNb++;
-        }
-        row = sheet.createRow(++rowNb);
-
-        //Moyenne des dons
-        colNb = 0;
-        cell = row.createCell(colNb);
-        cell.setCellValue("Moyenne des dons");
-        colNb++;
-        for (Projet p : projetSet.toList()) {
-            cell = row.createCell(colNb);
-            cell.setCellValue(p.getMoyenne());
-            colNb++;
-        }
-
-
-            try (OutputStream fileOut = new FileOutputStream(filename)) {
-                wb.write(fileOut);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-    private static void addLine(String colonneA, ProjetSet projetSet) {
+    private static void addLineProjets(String colonneA, ProjetSet projetSet) {
         cell = row.createCell(colNb);
         cell.setCellValue(colonneA);
         colNb++;
-        //Noms des projets
-        for (Projet p : projetSet.toList()) {
-            cell = row.createCell(colNb);
-            cell.setCellValue(p.getName());
-            colNb++;
+
+        for (Projet projet : projetSet.toList()) {
+            addColonneProjet(colonneA, projet);
         }
+
         row = sheet.createRow(++rowNb);
+        colNb = 0;
     }
+
+    private static void addLineProjet(String colonneA, Projet projet) {
+        cell = row.createCell(colNb);
+        cell.setCellValue(colonneA);
+        colNb++;
+
+        addColonneProjet(colonneA, projet);
+
+        row = sheet.createRow(++rowNb);
+        colNb = 0;
     }
+
+    private static void addColonneProjet(String colonneA, Projet projet) {
+            cell = row.createCell(colNb);
+            testProjet(colonneA, projet);
+            colNb++;
+    }
+
+    private static void testProjet(String colonneA,Projet projet) {
+        if (colonneA.endsWith(NomProjet)) {
+            cell.setCellValue(projet.getName());
+        } else if (colonneA.endsWith(Paye)) {
+            cell.setCellValue(projet.getSommePayeeProjet());
+        }else if (colonneA.endsWith(Recevoir)) {
+            cell.setCellValue(projet.getSommeRestanteProjet());
+        } else if (colonneA.endsWith(Global)) {
+            cell.setCellValue(projet.getSommeTotaleProjet());
+        } else if (colonneA.endsWith(NbDons)) {
+            cell.setCellValue(projet.getNbDonsNonAnnuleProjet());
+        } else {
+            cell.setCellValue(projet.getMoyenne());
+        }
+    }
+
+}

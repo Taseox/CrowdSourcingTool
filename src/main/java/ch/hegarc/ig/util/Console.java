@@ -88,18 +88,16 @@ public class Console {
                         String fileName = cmdLine.getOptionValue(OPT_FICHIER.getOpt());
                         String projectName = cmdLine.getOptionValue(OPT_PROJET.getOpt());
                         try{
-                            ExportXls.run(projectName,fileName);
+                            ExportXls.statsProjet(projets.getProjectByName(projectName),fileName);
                             System.out.println("Les statistiques du projet : " + projectName + "à été exporté dans le fichier : " + fileName);
                         }catch(Exception E){
                             E.printStackTrace();
-
                         }
                     } else if (cmdLine.hasOption(OPT_FICHIER.getOpt())) {
                         String fileName = cmdLine.getOptionValue(OPT_FICHIER.getOpt());
                         try{
-                            ExportXls.run(projets,fileName);
+                            ExportXls.statsProjets(projets,fileName);
                             System.out.println("Les statistiques de tous les projets ont été exporté dans le fichier : " + fileName);
-
                         }catch(Exception E){
                             E.printStackTrace();
                         }
