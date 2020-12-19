@@ -6,6 +6,7 @@ import org.apache.poi.xssf.usermodel.*;
 import java.io.*;
 
 public class ExportXls {
+    //Définition des lignes à sortir dans le fichier
     final private static String NomProjet = "Projet (nom)";
     final private static String Paye = "Total payé";
     final private static String Recevoir = "Total à recevoir";
@@ -13,16 +14,15 @@ public class ExportXls {
     final private static String NbDons = "Nombre de don (non-annulé)";
     final private static String Moyenne = "Moyenne des dons";
 
+    //Déclaration des variables pour génération du fichier Excel
     private static int rowNb = 0;
     private static int colNb = 0;
     private static XSSFRow row;
     private static XSSFCell cell;
-
     private static XSSFWorkbook wb = new XSSFWorkbook();
     private static XSSFSheet sheet ;
 
     public static void statsProjets(ProjetSet projetSet, String filename) {
-
         sheet = wb.createSheet(String.valueOf(projetSet.hashCode()));
         row = sheet.createRow(rowNb);
 
@@ -64,28 +64,32 @@ public class ExportXls {
         }
     }
 
-    private static void addLineProjets(String colonneA, ProjetSet projetSet) {
+    private static void ajoutColonneA(String colonneA) {
         cell = row.createCell(colNb);
         cell.setCellValue(colonneA);
-        colNb++;
-
-        for (Projet projet : projetSet.toList()) {
-            addColonneProjet(colonneA, projet);
+        if (colonneA == Global) {
+            policeGras();
         }
+        colNb++;
+    }
 
+    private static void miseEnPageFin() {
         row = sheet.createRow(++rowNb);
         colNb = 0;
     }
 
+    private static void addLineProjets(String colonneA, ProjetSet projetSet) {
+        ajoutColonneA(colonneA);
+        for (Projet projet : projetSet.toList()) {
+            addColonneProjet(colonneA, projet);
+        }
+        miseEnPageFin();
+    }
+
     private static void addLineProjet(String colonneA, Projet projet) {
-        cell = row.createCell(colNb);
-        cell.setCellValue(colonneA);
-        colNb++;
-
+        ajoutColonneA(colonneA);
         addColonneProjet(colonneA, projet);
-
-        row = sheet.createRow(++rowNb);
-        colNb = 0;
+        miseEnPageFin();
     }
 
     private static void addColonneProjet(String colonneA, Projet projet) {
@@ -94,20 +98,29 @@ public class ExportXls {
             colNb++;
     }
 
+    //Teste quel est le contenu de la colonneA et exécute la bonne fonction
     private static void testProjet(String colonneA,Projet projet) {
-        if (colonneA.endsWith(NomProjet)) {
+        if (colonneA == NomProjet) {
             cell.setCellValue(projet.getName());
-        } else if (colonneA.endsWith(Paye)) {
+        } else if (colonneA == Paye) {
             cell.setCellValue(projet.getSommePayeeProjet());
-        }else if (colonneA.endsWith(Recevoir)) {
+        }else if (colonneA == Recevoir) {
             cell.setCellValue(projet.getSommeRestanteProjet());
-        } else if (colonneA.endsWith(Global)) {
+        } else if (colonneA == Global) {
             cell.setCellValue(projet.getSommeTotaleProjet());
-        } else if (colonneA.endsWith(NbDons)) {
+            policeGras();
+        } else if (colonneA == NbDons) {
             cell.setCellValue(projet.getNbDonsNonAnnuleProjet());
         } else {
-            cell.setCellValue(projet.getMoyenne());
+            cell.setCellValue(projet.getMoyenneDons());
         }
     }
 
+    private static void policeGras() {
+        XSSFCellStyle styleBold = wb.createCellStyle();
+        XSSFFont font = wb.createFont ();
+        font.setBold(true);
+        styleBold.setFont(font);
+        cell.setCellStyle(styleBold);
+    }
 }

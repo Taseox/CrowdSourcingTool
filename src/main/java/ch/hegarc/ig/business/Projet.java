@@ -1,6 +1,5 @@
 package ch.hegarc.ig.business;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.*;
@@ -30,10 +29,6 @@ public class Projet implements Comparable<Projet>{
         this.name = name;
         this.donateurs = donateurs;
         this.trierDonateurs();
-    }
-
-    private Projet(String projetName) {
-        this.name = projetName;
     }
 
     public long getId() {
@@ -69,7 +64,6 @@ public class Projet implements Comparable<Projet>{
         return stream.filter(donateur -> donateur.getDateVersement().equalsIgnoreCase("")).collect(Collectors.toList());
     }
 
-
     public Long getNamelistDonations(String nameList){
         Long somme = Long.valueOf(0);
         List<String> tokens = new ArrayList<>();
@@ -87,37 +81,16 @@ public class Projet implements Comparable<Projet>{
         return somme;
     }
 
-
     public Long getSommePayeeProjet() {
-        Long sommePayee = Long.valueOf(0);
-        for (Donateur d : this.getDonateurs()) {
-            if (d.isPaid()) {
-                sommePayee = +d.getSomme();
-            }
-        }
-        return sommePayee;
-        //return this.getDonateurs ().stream ().filter (Donateur::isPaid).mapToLong (Donateur::getSomme).sum ();
+        return this.getDonateurs().stream().filter(donateur -> !donateur.isAnnule() && donateur.isPaid()).mapToLong(Donateur::getSomme).sum();
     }
 
-    //Retourne le montant total des dons restant à payer (ceux qui n'ont pas encore de date de versement)
     public Long getSommeRestanteProjet() {
-        Long sommeRestante = Long.valueOf(0);
-        for (Donateur d : this.getDonateurs()) {
-            if (!d.isPaid() && !d.isAnnule()) {
-                sommeRestante = +d.getSomme();
-            }
-        }
-        return sommeRestante;
-
+        return this.getDonateurs().stream().filter(donateur -> !donateur.isAnnule() && !donateur.isPaid()).mapToLong(Donateur::getSomme).sum();
     }
 
     public Long getSommeTotaleProjet(){
-        Long sommeTotale = Long.valueOf(0);
-        for (Donateur d : this.getDonateurs()) {
-            if (!d.isAnnule())
-                sommeTotale = +d.getSomme();
-        }
-        return sommeTotale;
+        return this.getDonateurs().stream().filter(donateur -> !donateur.isAnnule()).mapToLong(Donateur::getSomme).sum();
     }
 
     public int getNbDonsNonAnnuleProjet(){
@@ -129,16 +102,9 @@ public class Projet implements Comparable<Projet>{
         return nbDons;
     }
 
-    public Long getMoyenne(){
-        Long total = Long.valueOf(0);
-        int nbDonateurs = 0;
-        Long moyenne = Long.valueOf(0);
-        for (Donateur d : this.getDonateurs()) {
-            total = +d.getSomme();
-            nbDonateurs = +1;
-        }
-        moyenne = total / nbDonateurs;
-        return moyenne;
+
+    public Long getMoyenneDons(){
+        return (long) this.getDonateurs().stream().mapToLong(Donateur::getSomme).average().orElse(- 100);
     }
 
     public void addDonateurs(List<Donateur> donateurs) {
