@@ -14,6 +14,8 @@ public class Donateur {
     private String ville;
     private String monnaie;
     private long somme;
+    private boolean paye;
+    private boolean annule;
     private String dateDon;
     private String dateVersement;
 
@@ -24,10 +26,10 @@ public class Donateur {
      * @param somme
      * @param ville
      * @param monnaie
-     * @param pay
+     * @param paye
      * @param langue
      * @param nom
-     * @param annul
+     * @param annule
      * @param dateDon
      * @param prenom
      * @param dateVersement
@@ -35,7 +37,7 @@ public class Donateur {
      * @param id
      * @param email
      */
-    public Donateur(long id, String prenom, String nom, String email, String langue, String adresse, String ville, String monnaie, long somme, boolean pay, boolean annul, String dateDon, String dateVersement) {
+    public Donateur(long id, String prenom, String nom, String email, String langue, String adresse, String ville, String monnaie, long somme, boolean paye, boolean annule, String dateDon, String dateVersement) {
         super();
         this.id = id;
         this.prenom = prenom;
@@ -46,6 +48,8 @@ public class Donateur {
         this.ville = ville;
         this.monnaie = monnaie;
         this.somme = somme;
+        this.paye = paye;
+        this.annule = annule;
         this.dateDon = dateDon;
         this.dateVersement = dateVersement;
     }
@@ -135,6 +139,10 @@ public class Donateur {
     public void setDateDon(String dateDon) {
         this.dateDon = dateDon;
     }
+
+    public boolean isPaid() { return this.paye;}
+
+    public boolean isAnnule() { return this.annule;}
 
     public String getDateVersement() {
         return dateVersement;

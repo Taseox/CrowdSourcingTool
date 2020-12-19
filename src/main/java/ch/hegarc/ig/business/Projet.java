@@ -87,6 +87,60 @@ public class Projet implements Comparable<Projet>{
         return somme;
     }
 
+
+    public Long getSommePayeeProjet() {
+        Long sommePayee = Long.valueOf(0);
+        for (Donateur d : this.getDonateurs()) {
+            if (d.isPaid()) {
+                sommePayee = +d.getSomme();
+            }
+        }
+        return sommePayee;
+        //return this.getDonateurs ().stream ().filter (Donateur::isPaid).mapToLong (Donateur::getSomme).sum ();
+    }
+
+    //Retourne le montant total des dons restant à payer (ceux qui n'ont pas encore de date de versement)
+    public Long getSommeRestanteProjet() {
+        Long sommeRestante = Long.valueOf(0);
+        for (Donateur d : this.getDonateurs()) {
+            if (!d.isPaid() && !d.isAnnule()) {
+                sommeRestante = +d.getSomme();
+            }
+        }
+        return sommeRestante;
+
+    }
+
+    public Long getSommeTotaleProjet(){
+        Long sommeTotale = Long.valueOf(0);
+        for (Donateur d : this.getDonateurs()) {
+            if (!d.isAnnule())
+                sommeTotale = +d.getSomme();
+        }
+        return sommeTotale;
+    }
+
+    public int getNbDonsNonAnnuleProjet(){
+        int nbDons = 0;
+        for (Donateur d : this.getDonateurs()) {
+            if (!d.isAnnule())
+                ++nbDons;
+        }
+        return nbDons;
+    }
+
+    public Long getMoyenne(){
+        Long total = Long.valueOf(0);
+        int nbDonateurs = 0;
+        Long moyenne = Long.valueOf(0);
+        for (Donateur d : this.getDonateurs()) {
+            total = +d.getSomme();
+            nbDonateurs = +1;
+        }
+        moyenne = total / nbDonateurs;
+        return moyenne;
+    }
+
     public void addDonateurs(List<Donateur> donateurs) {
         for (Donateur donateur : donateurs)
             addDonateur(donateur);

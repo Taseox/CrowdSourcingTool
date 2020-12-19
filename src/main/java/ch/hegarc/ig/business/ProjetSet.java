@@ -1,15 +1,5 @@
 package ch.hegarc.ig.business;
-
-import ch.hegarc.ig.util.jackson.JacksonReader;
-import ch.hegarc.ig.util.jackson.JacksonWriter;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.org.apache.xpath.internal.operations.String;
-
-import java.io.File;
 import java.util.*;
-import java.util.stream.Stream;
 
 public class ProjetSet {
     private Set<Projet> projets;
@@ -24,7 +14,7 @@ public class ProjetSet {
     }
 
     public void addProjet(Projet projet) {
-        Projet projetExisant = this.getProjectName(projet.getName());
+        Projet projetExisant = this.getProjectByName(projet.getName());
         if (projetExisant.getName() == null) {
             projet.trierDonateurs();
             this.projets.add(projet);
@@ -35,7 +25,7 @@ public class ProjetSet {
     }
 
 
-    public Projet getProjectName(String nom) {
+    public Projet getProjectByName(String nom) {
         Projet projet = new Projet();
         for (Projet p : this.projets) {
             if (p.getName().equalsIgnoreCase(nom)) {

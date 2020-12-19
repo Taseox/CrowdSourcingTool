@@ -1,7 +1,6 @@
 package ch.hegarc.ig.util.StatsUtils;
 
-import ch.hegarc.ig.cpo.business.Student;
-import ch.hegarc.ig.cpo.business.StudentList;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -17,11 +16,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.OptionalDouble;
 
-public class MainPdf {
+public class ExportPdf {
 
     public static void main(String[] args) throws Exception {
 
-        writePdf();
+        //writePdf();
         readPdf();
     }
 
@@ -39,7 +38,7 @@ public class MainPdf {
             e.printStackTrace();
         }
     }
-
+/*
     static void writePdf() {
         ObjectMapper om = new ObjectMapper();
         String outputFileName = "Moyennes.pdf";
@@ -89,5 +88,5 @@ public class MainPdf {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 }
