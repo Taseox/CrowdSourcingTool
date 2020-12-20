@@ -81,17 +81,7 @@ public class ProjetSet {
             return sommeTotale;
         }
 
-        public String getDonateurMail (Projet projet){
-            StringBuilder sb = new StringBuilder("");
-            for (Donateur d : projet.getDonateurs()) {
-                if (d.getEmail() != null) {
-                    sb.append(d.getEmail());
-                    sb.append(";");
-                    sb.append("\n");
-                }
-            }
-            return sb.toString();
-        }
+
 
         public String getMedianeEtMoyenne (Projet projet){
             Long total = Long.valueOf(0);
@@ -116,13 +106,7 @@ public class ProjetSet {
             return sb.toString();
         }
 
-        public Long getComission (Projet projet){
-            Long comission = Long.valueOf(0);
-            for (Donateur d : projet.getDonateurs()) {
-                comission = +((d.getSomme() / 100) * 5);
-            }
-            return comission;
-        }
+
 
         public int size() { return this.projets.size();}
 

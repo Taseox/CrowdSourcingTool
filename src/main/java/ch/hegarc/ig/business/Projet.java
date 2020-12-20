@@ -51,17 +51,33 @@ public class Projet implements Comparable<Projet>{
         return donateurs;
     }
 
-    public List<Donateur> get5Best()
-    {
+    public List<Donateur> get5Best() {
         Stream<Donateur> stream = donateurs.stream();
-        return stream.sorted(Comparator.comparing(Donateur::getSomme))
-                .limit(5).collect(Collectors.toList());
+        return stream.sorted(Comparator.comparing(Donateur::getSomme)).limit(5).collect(Collectors.toList());
     }
 
-    public List<Donateur> getNonPaye()
-    {
+    public List<Donateur> getNonPaye() {
         Stream<Donateur> stream = donateurs.stream();
         return stream.filter(donateur -> donateur.getDateVersement().equalsIgnoreCase("")).collect(Collectors.toList());
+    }
+
+    public Long getComission(){
+        Long comission = Long.valueOf(0);
+        for (Donateur d : this.getDonateurs()) {
+            comission = +((d.getSomme() / 100) * 5);
+        }
+        return comission;
+    }
+
+    public String getDonateurMail(){
+        StringBuilder sb = new StringBuilder();
+        for (Donateur d : this.getDonateurs()) {
+            if (d.getEmail() != null) {
+                sb.append(d.getEmail());
+                sb.append(";");
+            }
+        }
+        return sb.toString();
     }
 
     public Long getNamelistDonations(String nameList){
@@ -112,7 +128,7 @@ public class Projet implements Comparable<Projet>{
             addDonateur(donateur);
     }
 
-    public Boolean removeDonateur(String lastName, String firstName) {
+    public boolean removeDonateur(String lastName, String firstName) {
         Donateur donateurTest = new Donateur(firstName, lastName);
         Donateur donateurToDelete = new Donateur();
         for(Donateur d : donateurs){
@@ -120,7 +136,6 @@ public class Projet implements Comparable<Projet>{
                 donateurToDelete = d;
             }
         }
-
         return donateurs.remove(donateurToDelete);
     }
 

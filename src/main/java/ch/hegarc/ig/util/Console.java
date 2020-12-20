@@ -3,6 +3,7 @@ package ch.hegarc.ig.util;
 import ch.hegarc.ig.business.Donateur;
 import ch.hegarc.ig.business.Projet;
 import ch.hegarc.ig.business.ProjetSet;
+import ch.hegarc.ig.util.StatsUtils.ExportPdf;
 import ch.hegarc.ig.util.StatsUtils.ExportXls;
 import ch.hegarc.ig.util.jackson.ImportJSON;
 import ch.hegarc.ig.util.jackson.ExportJSON;
@@ -91,6 +92,10 @@ public class Console {
 
                 case CMD_STATS:
                     try {
+                        if (cmdLine.hasOption(OPT_PROJET.getOpt())) {
+                            String projectName = cmdLine.getOptionValue(OPT_PROJET.getOpt());
+                            ExportPdf.writePdf(projets.getProjectByName(projectName));
+                        }
                         if (cmdLine.hasOption(OPT_FICHIER.getOpt())) {
                             String fileName = cmdLine.getOptionValue(OPT_FICHIER.getOpt());
                             if (projets.size() <= 0) {
