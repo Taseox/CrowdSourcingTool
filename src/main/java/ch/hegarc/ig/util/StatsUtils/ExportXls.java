@@ -19,10 +19,11 @@ public class ExportXls {
     private static int colNb = 0;
     private static XSSFRow row;
     private static XSSFCell cell;
-    private static XSSFWorkbook wb = new XSSFWorkbook();
+    private static XSSFWorkbook wb;
     private static XSSFSheet sheet ;
 
-    public static void statsProjets(ProjetSet projetSet, String filename) {
+    public static void statsProjets(ProjetSet projetSet, String filename) throws Exception {
+        initXlsx();
         sheet = wb.createSheet(String.valueOf(projetSet.hashCode()));
         row = sheet.createRow(rowNb);
 
@@ -34,16 +35,12 @@ public class ExportXls {
         addLineProjets(NbDons, projetSet);
         addLineProjets(Moyenne, projetSet);
 
-        try (OutputStream fileOut = new FileOutputStream(filename)) {
-            wb.write(fileOut);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        OutputStream fileOut = new FileOutputStream(filename);
+        wb.write(fileOut);
     }
 
-    public static void statsProjet(Projet projet, String filename) {
+    public static void statsProjet(Projet projet, String filename) throws Exception {
+        initXlsx();
         sheet = wb.createSheet(String.valueOf(projet.hashCode()));
         row = sheet.createRow(rowNb);
 
@@ -55,15 +52,14 @@ public class ExportXls {
         addLineProjet(NbDons, projet);
         addLineProjet(Moyenne, projet);
 
-        try (OutputStream fileOut = new FileOutputStream(filename)) {
-            wb.write(fileOut);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        OutputStream fileOut = new FileOutputStream(filename);
+        wb.write(fileOut);
     }
-
+    private static void initXlsx() {
+        wb = new XSSFWorkbook();
+        rowNb = 0;
+        colNb = 0;
+    }
     private static void ajoutColonneA(String colonneA) {
         cell = row.createCell(colNb);
         cell.setCellValue(colonneA);

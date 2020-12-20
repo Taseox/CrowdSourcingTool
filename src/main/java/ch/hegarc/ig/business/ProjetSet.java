@@ -28,9 +28,8 @@ public class ProjetSet {
     public Projet getProjectByName(String nom) {
         Projet projet = new Projet();
         for (Projet p : this.projets) {
-            if (p.getName().equalsIgnoreCase(nom)) {
+            if (p.getName().equalsIgnoreCase(nom))
                 projet = p;
-            }
         }
         return projet;
     }
@@ -57,9 +56,8 @@ public class ProjetSet {
     public Long getSommePayeeProjet(Projet projet) {
         Long sommePayee = Long.valueOf(0);
         for (Donateur d : projet.getDonateurs()) {
-            if (d.getDateVersement() != null) {
+            if (d.getDateVersement() != null)
                 sommePayee = +d.getSomme();
-            }
         }
         return sommePayee;
     }
@@ -68,9 +66,8 @@ public class ProjetSet {
     public Long getSommeRestanteProjet(Projet projet) {
         Long sommeRestante = Long.valueOf(0);
         for (Donateur d : projet.getDonateurs()) {
-            if (d.getDateVersement() == null) {
+            if (d.getDateVersement() == null)
                 sommeRestante = +d.getSomme();
-            }
         }
         return sommeRestante;
 
@@ -78,9 +75,9 @@ public class ProjetSet {
 
         public Long getSommeTotaleProjet (Projet projet){
             Long sommeTotale = Long.valueOf(0);
-            for (Donateur d : projet.getDonateurs()) {
+            for (Donateur d : projet.getDonateurs())
                 sommeTotale=+d.getSomme();
-            }
+
             return sommeTotale;
         }
 
@@ -127,15 +124,11 @@ public class ProjetSet {
             return comission;
         }
 
+        public int size() { return this.projets.size();}
 
-        public Set<Projet> getList () {
-            return this.projets;
-        }
-
-        public List<Projet> toList () {
+        public List<Projet> toList() {
             return new LinkedList<>(this.projets);
         }
-
 
         public String toString () {
             StringBuilder sb = new StringBuilder();

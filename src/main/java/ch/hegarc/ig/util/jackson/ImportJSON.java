@@ -7,19 +7,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
-public class JacksonReader {
+public class ImportJSON {
 
-    private static final Logger logger = Logger.getLogger(JacksonReader.class.getName());
+    private static final Logger logger = Logger.getLogger(ImportJSON.class.getName());
 
     public static Set<Projet> run(String filename) throws IOException{
             // ObjectMapper - Ignorer les propriétés inconnues
             ObjectMapper om = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-            //ObjectMapper om = new ObjectMapper();
 
             Set<Projet> projets = om.readValue(new File(filename), new TypeReference<Set<Projet>>() {
             });

@@ -151,10 +151,8 @@ public class Projet implements Comparable<Projet>{
         StringBuilder sb = new StringBuilder();
         sb.append("Projet : ");
         sb.append(getName());
-        sb.append(" numero ");
-        sb.append(getId());
         sb.append("\n");
-        if (this.donateurs.isEmpty ())
+        if (this.donateurs.isEmpty())
             sb.append ("Pas de donateurs pour ce projet");
         else {
             sb.append ("Les donateurs de ce projet : \n");

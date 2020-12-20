@@ -4,9 +4,9 @@ import ch.hegarc.ig.business.Donateur;
 import ch.hegarc.ig.business.Projet;
 import ch.hegarc.ig.business.ProjetSet;
 import ch.hegarc.ig.util.StatsUtils.ExportXls;
-import ch.hegarc.ig.util.jackson.JacksonReader;
-import ch.hegarc.ig.util.jackson.JacksonWriter;
-import ch.hegarc.ig.util.jaxb.unmarshalling.JaxbUnmarshalling;
+import ch.hegarc.ig.util.jackson.ImportJSON;
+import ch.hegarc.ig.util.jackson.ExportJSON;
+import ch.hegarc.ig.util.jaxb.ImportXML;
 import org.apache.commons.cli.*;
 
 import java.util.Scanner;
@@ -51,12 +51,12 @@ public class Console {
                         System.out.println("Import du fichier " + fileName);
                         try {
                             if (fileName.endsWith(".xml")) {
-                                this.projets.addProjets(JaxbUnmarshalling.run(fileName));
+                                this.projets.addProjets(ImportXML.run(fileName));
                             } else if (fileName.endsWith(".json")) {
-                                this.projets.addProjets(JacksonReader.run(fileName));
+                                this.projets.addProjets(ImportJSON.run(fileName));
                             }
                             System.out.println(projets.toString());
-                        } catch (Exception E){
+                        } catch (Exception E) {
                             E.printStackTrace();
                         }
                     } else {
@@ -66,17 +66,23 @@ public class Console {
 
                 case CMD_EXPORT:
                     if (cmdLine.hasOption(OPT_FICHIER.getOpt()) && cmdLine.hasOption(OPT_PROJET.getOpt())) {
-
-                        String fileName = cmdLine.getOptionValue(OPT_FICHIER.getOpt());
-                        String projectName = cmdLine.getOptionValue(OPT_PROJET.getOpt());
-                        if(projets.getProjectByName(projectName) == null) {
-                            System.out.println("Le projet " + projectName + "n'existe pas");
-                        } else if(projectName.equalsIgnoreCase("All")){
-                            System.out.println("Export de tous les projets.");
-                            JacksonWriter.run(this.projets.toList(), fileName);
-                        }else{
-                            JacksonWriter.run(projets.getProjectByName(projectName), fileName);
-                            System.out.println(projets.getMedianeEtMoyenne(projets.getProjectByName(projectName)));
+                        try {
+                            String fileName = cmdLine.getOptionValue(OPT_FICHIER.getOpt());
+                            String projectName = cmdLine.getOptionValue(OPT_PROJET.getOpt());
+                            if (!fileName.endsWith(".json")) {
+                                System.out.println("Ce format de sortie n'est pas pris en charge, seul un fichier JSON peut être généré.");
+                            } else if (projectName.equalsIgnoreCase("All")) {
+                                System.out.println("Export de tous les projets.");
+                                ExportJSON.run(this.projets.toList(), fileName);
+                            } else if (projets.getProjectByName(projectName).getName() == null) {
+                                System.out.println("Le projet " + projectName + " n'existe pas");
+                            } else {
+                                System.out.println("Export du projet " + fileName);
+                                ExportJSON.run(projets.getProjectByName(projectName), fileName);
+                                System.out.println(projets.getMedianeEtMoyenne(projets.getProjectByName(projectName)));
+                            }
+                        } catch (Exception E) {
+                            E.printStackTrace();
                         }
                     } else {
                         printAppHelp();
@@ -84,39 +90,43 @@ public class Console {
                     break;
 
                 case CMD_STATS:
-                    if (cmdLine.hasOption(OPT_FICHIER.getOpt()) && cmdLine.hasOption(OPT_PROJET.getOpt())) {
-                        String fileName = cmdLine.getOptionValue(OPT_FICHIER.getOpt());
-                        String projectName = cmdLine.getOptionValue(OPT_PROJET.getOpt());
-                        try{
-                            ExportXls.statsProjet(projets.getProjectByName(projectName),fileName);
-                            System.out.println("Les statistiques du projet : " + projectName + "à été exporté dans le fichier : " + fileName);
-                        }catch(Exception E){
-                            E.printStackTrace();
+                    try {
+                        if (cmdLine.hasOption(OPT_FICHIER.getOpt())) {
+                            String fileName = cmdLine.getOptionValue(OPT_FICHIER.getOpt());
+                            if (projets.size() <= 0) {
+                                System.out.println("La base de données est vide et ne peut être exportée.");
+                            } else if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".xls")) {
+                                System.out.println("Ce format de sortie n'est pas pris en charge, seul un fichier XLSX ou XLS peut être généré.");
+                            } else if (cmdLine.hasOption(OPT_PROJET.getOpt())) {
+                                String projectName = cmdLine.getOptionValue(OPT_PROJET.getOpt());
+                                if (projets.getProjectByName(projectName).getName() == null) {
+                                    System.out.println("Le projet " + projectName + " n'existe pas dans la base de données ! Aucun fichier n'a pas été généré.");
+                                } else {
+                                    ExportXls.statsProjet(projets.getProjectByName(projectName), fileName);
+                                    System.out.println("Les statistiques du projet " + projectName + " ont été exportées dans le fichier : " + fileName);
+                                }
+                            } else {
+                                ExportXls.statsProjets(projets, fileName);
+                                System.out.println("Les statistiques de tous les projets ont été exportées dans le fichier : " + fileName);
+                            }
+                        } else {
+                            printAppHelp();
                         }
-                    } else if (cmdLine.hasOption(OPT_FICHIER.getOpt())) {
-                        String fileName = cmdLine.getOptionValue(OPT_FICHIER.getOpt());
-                        try{
-                            ExportXls.statsProjets(projets,fileName);
-                            System.out.println("Les statistiques de tous les projets ont été exporté dans le fichier : " + fileName);
-                        }catch(Exception E){
-                            E.printStackTrace();
-                        }
-                    } else {
-                        printAppHelp();
+                    } catch (Exception E) {
+                        E.printStackTrace();
                     }
                     break;
 
                 case CMD_ADDDONATEUR:
-
-                    if (cmdLine.hasOption(OPT_PROJET.getOpt()) && cmdLine.hasOption(OPT_NOM.getOpt()) && cmdLine.hasOption(OPT_PRENOM.getOpt()) && cmdLine.hasOption(OPT_SOMME.getOpt())){
-                        try{
+                    if (cmdLine.hasOption(OPT_PROJET.getOpt()) && cmdLine.hasOption(OPT_NOM.getOpt()) && cmdLine.hasOption(OPT_PRENOM.getOpt()) && cmdLine.hasOption(OPT_SOMME.getOpt())) {
+                        try {
                             String projectName = cmdLine.getOptionValue(OPT_PROJET.getOpt());
                             String nom = cmdLine.getOptionValue(OPT_NOM.getOpt());
                             String prenom = cmdLine.getOptionValue(OPT_PRENOM.getOpt());
-                            Long somme = Long.parseLong(cmdLine.getOptionValue (OPT_SOMME.getOpt()));
+                            Long somme = Long.parseLong(cmdLine.getOptionValue(OPT_SOMME.getOpt()));
 
-                            if (projets.getProjectByName(projectName)==null) {
-                                System.out.println("Projet inexistant!");
+                            if (projets.getProjectByName(projectName).getName() == null) {
+                                System.out.println("Projet inexistant ! Le don de " + nom + prenom + " n'a pas été pris en compte.");
                             } else {
                                 Donateur donateur = new Donateur();
                                 donateur.setNom(nom);
@@ -124,39 +134,36 @@ public class Console {
                                 donateur.setSomme(somme);
                                 donateur.setMonnaie("CHF");
                                 if (projets.getProjectByName(projectName).addDonateur(donateur)) {
-                                    System.out.println("Donateur ajouté au projet avec succès!");
+                                    System.out.println(nom + " " + prenom + " vient de faire un don de " + somme + " au projet " + projectName);
                                 } else {
-                                    System.out.println("Donateur déjà existant");
+                                    System.out.println(nom + " " + prenom + " a déjà fait un don pour le projet " + projectName);
                                 }
                                 System.out.println(projets.getProjectByName(projectName).toString());
                             }
-                        }catch (Exception E){
+                        } catch (Exception E) {
                             E.printStackTrace();
                         }
-
-                    }else {
+                    } else {
                         printAppHelp();
                     }
                     break;
 
                 case CMD_REMOVEDONATEUR:
-
-                    if (cmdLine.hasOption(OPT_PROJET.getOpt()) && cmdLine.hasOption(OPT_NOM.getOpt()) && cmdLine.hasOption(OPT_PRENOM.getOpt())){
-                        try{
+                    if (cmdLine.hasOption(OPT_PROJET.getOpt()) && cmdLine.hasOption(OPT_NOM.getOpt()) && cmdLine.hasOption(OPT_PRENOM.getOpt())) {
+                        try {
                             Projet projet = projets.getProjectByName(cmdLine.getOptionValue(OPT_PROJET.getOpt()));
                             String nom = cmdLine.getOptionValue(OPT_NOM.getOpt());
                             String prenom = cmdLine.getOptionValue(OPT_PRENOM.getOpt());
-                            if(projet.removeDonateur(nom, prenom)) {
+                            if (projet.removeDonateur(nom, prenom)) {
                                 System.out.println("Donateur supprimé du projet avec succès!");
                             } else {
                                 System.out.println("Donateur non existant dans ce projet!");
                             }
                             System.out.println(projets.getProjectByName(cmdLine.getOptionValue(OPT_PROJET.getOpt())).toString());
-                        }catch (Exception E){
+                        } catch (Exception E) {
                             E.printStackTrace();
                         }
-
-                    }else {
+                    } else {
                         printAppHelp();
                     }
                     break;
