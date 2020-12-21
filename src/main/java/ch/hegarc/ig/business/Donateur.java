@@ -60,6 +60,14 @@ public class Donateur {
         this.nom = nom;
     }
 
+    public Donateur(String prenom, String nom, long somme) {
+        super();
+        this.prenom = prenom;
+        this.nom = nom;
+        this.somme = somme;
+        this.monnaie = "CHF";
+    }
+
     public long getId() {
         return id;
     }

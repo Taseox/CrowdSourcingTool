@@ -23,13 +23,11 @@ public class Console {
     final private String CMD_ADDDONATEUR = "add";
     final private String CMD_REMOVEDONATEUR = "remove";
 
-
     final private Option OPT_FICHIER = new Option("f", "fichier", true, "nom du fichier");
     final private Option OPT_PROJET = new Option("p", "projet", true, "nom du projet");
     final private Option OPT_NOM = new Option("n", "nom", true, "nom du donateur");
     final private Option OPT_PRENOM = new Option("pr", "prenom", true, "prenom du donateur");
     final private Option OPT_SOMME = new Option("s", "somme", true, "somme donnee");
-
 
     /**
      * Démarre la commande
@@ -80,6 +78,9 @@ public class Console {
                             } else {
                                 System.out.println("Export du projet " + fileName);
                                 ExportJSON.run(projets.getProjectByName(projectName), fileName);
+
+                                //TODO voir comment on veut utiliser ces fonctions
+                                // idem Pour une liste de noms séparée par des virgules et reçu en argument, calculer le total des dons pour ces personnes, quelque soit le projet
                                 System.out.println(projets.getMedianeEtMoyenne(projets.getProjectByName(projectName)));
                             }
                         } catch (Exception E) {
@@ -92,17 +93,13 @@ public class Console {
 
                 case CMD_STATS:
                     try {
-                        if (cmdLine.hasOption(OPT_PROJET.getOpt())) {
-                            String projectName = cmdLine.getOptionValue(OPT_PROJET.getOpt());
-                            ExportPdf.writePdf(projets.getProjectByName(projectName));
-                        }
-                        if (cmdLine.hasOption(OPT_FICHIER.getOpt())) {
+
+                        if (projets.size() <= 0)
+                            System.out.println("La base de données est vide et ne peut être exportée.");
+                        //Test pour un export Excel
+                        else if (cmdLine.hasOption(OPT_FICHIER.getOpt())) {
                             String fileName = cmdLine.getOptionValue(OPT_FICHIER.getOpt());
-                            if (projets.size() <= 0) {
-                                System.out.println("La base de données est vide et ne peut être exportée.");
-                            } else if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".xls")) {
-                                System.out.println("Ce format de sortie n'est pas pris en charge, seul un fichier XLSX ou XLS peut être généré.");
-                            } else if (cmdLine.hasOption(OPT_PROJET.getOpt())) {
+                            if (cmdLine.hasOption(OPT_PROJET.getOpt())) {
                                 String projectName = cmdLine.getOptionValue(OPT_PROJET.getOpt());
                                 if (projets.getProjectByName(projectName).getName() == null) {
                                     System.out.println("Le projet " + projectName + " n'existe pas dans la base de données ! Aucun fichier n'a pas été généré.");
@@ -110,10 +107,18 @@ public class Console {
                                     ExportXls.statsProjet(projets.getProjectByName(projectName), fileName);
                                     System.out.println("Les statistiques du projet " + projectName + " ont été exportées dans le fichier : " + fileName);
                                 }
+                            } else if (!fileName.endsWith(".xlsx") && !fileName.endsWith(".xls")) {
+                                System.out.println("Ce format de sortie n'est pas pris en charge, seul un fichier XLSX ou XLS peut être généré.");
                             } else {
                                 ExportXls.statsProjets(projets, fileName);
                                 System.out.println("Les statistiques de tous les projets ont été exportées dans le fichier : " + fileName);
                             }
+                        }
+                        //Test pour Export PDF
+                        else if (cmdLine.hasOption(OPT_PROJET.getOpt())) {
+                            String projectName = cmdLine.getOptionValue(OPT_PROJET.getOpt());
+                            String fileName = ExportPdf.writePdf(projets.getProjectByName(projectName));
+                            System.out.println("Les statistiques du projet " + projectName + " ont été exportées dans le fichier : " + fileName);
                         } else {
                             printAppHelp();
                         }
@@ -133,11 +138,7 @@ public class Console {
                             if (projets.getProjectByName(projectName).getName() == null) {
                                 System.out.println("Projet inexistant ! Le don de " + nom + prenom + " n'a pas été pris en compte.");
                             } else {
-                                Donateur donateur = new Donateur();
-                                donateur.setNom(nom);
-                                donateur.setPrenom(prenom);
-                                donateur.setSomme(somme);
-                                donateur.setMonnaie("CHF");
+                                Donateur donateur = new Donateur(nom, prenom, somme);
                                 if (projets.getProjectByName(projectName).addDonateur(donateur)) {
                                     System.out.println(nom + " " + prenom + " vient de faire un don de " + somme + " au projet " + projectName);
                                 } else {
@@ -159,10 +160,11 @@ public class Console {
                             Projet projet = projets.getProjectByName(cmdLine.getOptionValue(OPT_PROJET.getOpt()));
                             String nom = cmdLine.getOptionValue(OPT_NOM.getOpt());
                             String prenom = cmdLine.getOptionValue(OPT_PRENOM.getOpt());
+
                             if (projet.removeDonateur(nom, prenom)) {
-                                System.out.println("Donateur supprimé du projet avec succès!");
+                                System.out.println(nom + " " + prenom + " supprimé du projet " + projet.getName() + " avec succès!");
                             } else {
-                                System.out.println("Donateur non existant dans ce projet!");
+                                System.out.println(nom + " " + prenom + " n'a pas fait de don pour le projet " + projet.getName());
                             }
                             System.out.println(projets.getProjectByName(cmdLine.getOptionValue(OPT_PROJET.getOpt())).toString());
                         } catch (Exception E) {
@@ -174,12 +176,12 @@ public class Console {
                     break;
 
                 case CMD_EXIT:
-                    System.out.println("Fermeture!");
+                    System.out.println("Fermeture !");
                     running = false;
                     break;
 
                 default:
-                    System.out.println("Commande non reconnue!");
+                    System.out.println("Commande non reconnue !");
                     printAppHelp();
                     break;
             }
@@ -204,7 +206,6 @@ public class Console {
             line = parser.parse(options, args);
 
         } catch (ParseException ex) {
-
             System.err.println("Erreur dans la lecture des arguments!");
             System.err.println(ex.toString());
             printAppHelp();
