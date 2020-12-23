@@ -15,7 +15,6 @@ public class ImportJSON {
     private static final Logger logger = Logger.getLogger(ImportJSON.class.getName());
 
     public static Set<Projet> run(String filename) throws IOException{
-            // ObjectMapper - Ignorer les propriétés inconnues
             ObjectMapper om = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
             Set<Projet> projets = om.readValue(new File(filename), new TypeReference<Set<Projet>>() {

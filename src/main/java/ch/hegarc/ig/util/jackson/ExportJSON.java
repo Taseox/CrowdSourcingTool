@@ -15,11 +15,6 @@ public class ExportJSON {
 
     public static void run(Projet projet, String filename) throws IOException {
             ObjectMapper om = new ObjectMapper();
-
-            // Ignorer les champs vide
-            //om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-            // Ecriture avec pretty print
             om.writerWithDefaultPrettyPrinter().writeValue(new File(filename), projet);
             
             logger.log(Level.INFO, "Fichier <" + filename + "> créé");
@@ -27,11 +22,6 @@ public class ExportJSON {
 
     public static void run (List<Projet> projets, String fileName) throws IOException {
             ObjectMapper om = new ObjectMapper ();
-
-//			Ignorer les champs vide - TODO Copier de la série 5. On garde ?
-//			om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-//			Ecriture avec pretty print
             om.writerWithDefaultPrettyPrinter ().writeValue (new File (fileName), projets);
 
             logger.log (Level.INFO, "Fichier '" + fileName + "' créé avec succès !");
